@@ -326,7 +326,7 @@ Public Class ModSetup
 #End If
     '高级材质
     Public Sub UiBlur(Value As Boolean)
-        FrmSetupUI.PanBlurValue.Visibility = If(Value, Visibility.Visible, Visibility.Collapsed)
+        'PanBlurValue 已从 XAML 移除
         If Value Then
             UiBlurValue(Setup.Get("UiBlurValue"))
         Else

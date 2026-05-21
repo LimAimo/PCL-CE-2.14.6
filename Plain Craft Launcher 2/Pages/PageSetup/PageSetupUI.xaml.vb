@@ -30,20 +30,16 @@ Public Class PageSetupUI
                 Case Else
                     NewText = "？？？"
             End Select
-            For Each Control In PanLauncherTheme.Children
-                If (TypeOf Control Is MyRadioBox) AndAlso CType(Control, MyRadioBox).IsEnabled Then
-                    CType(Control, MyRadioBox).Text = NewText
-                End If
-            Next
+            'PanLauncherTheme 已移除
         End If
 
 #If DEBUG Then
-        If EnableCustomTheme Then
-            LabLauncherDelta.Visibility = Visibility.Visible
-            SliderLauncherDelta.Visibility = Visibility.Visible
-            LabLauncherLight.Visibility = Visibility.Visible
-            SliderLauncherLight.Visibility = Visibility.Visible
-        End If
+        'If EnableCustomTheme Then
+        '    LabLauncherDelta.Visibility = Visibility.Visible
+        '    SliderLauncherDelta.Visibility = Visibility.Visible
+        '    LabLauncherLight.Visibility = Visibility.Visible
+        '    SliderLauncherLight.Visibility = Visibility.Visible
+        'End If
 #End If
 
         AniControlEnabled += 1
@@ -56,27 +52,18 @@ Public Class PageSetupUI
 
         SliderLoad()
 
-        PanLauncherHide.Visibility = Visibility.Visible
+        'PanLauncherHide 已移除
 
         '设置解锁
 
-        If Not RadioLauncherTheme8.IsEnabled Then LabLauncherTheme8Copy.ToolTip = "社区版不包含主题功能，请使用官方快照版"
-        RadioLauncherTheme8.ToolTip = "社区版不包含主题功能，请使用官方快照版"
-        If Not RadioLauncherTheme9.IsEnabled Then LabLauncherTheme9Copy.ToolTip = "社区版不包含主题功能，请使用官方快照版"
-        RadioLauncherTheme9.ToolTip = "社区版不包含主题功能，请使用官方快照版"
+        '主题相关控件已移除
         '极客蓝的处理在 ThemeCheck 中
 
     End Sub
     Public Sub Reload()
         Try
             '启动器
-            SliderLauncherOpacity.Value = Setup.Get("UiLauncherTransparent")
-            SliderLauncherHue.Value = Setup.Get("UiLauncherHue")
-            SliderLauncherSat.Value = Setup.Get("UiLauncherSat")
-            SliderLauncherDelta.Value = Setup.Get("UiLauncherDelta")
-            SliderLauncherLight.Value = Setup.Get("UiLauncherLight")
             'If Setup.Get("UiLauncherTheme") <= 14 Then CType(FindName("RadioLauncherTheme" & Setup.Get("UiLauncherTheme")), MyRadioBox).Checked = True
-            CheckLauncherLogo.Checked = Setup.Get("UiLauncherLogo")
             ComboDarkMode.SelectedIndex = Setup.Get("UiDarkMode")
             If Not Basics.IsAprilFool Then
                 'fix ui state error
@@ -85,20 +72,13 @@ Public Class PageSetupUI
             End If
             ComboDarkColor.SelectedIndex = Setup.Get("UiDarkColor")
             ComboLightColor.SelectedIndex = Setup.Get("UiLightColor")
-            CheckShowLaunchingHint.Checked = Setup.Get("UiShowLaunchingHint")
 
             '字体设置
             ComboUiFont.SelectedFontTag = Setup.Get("UiFont")
             ComboUiMotdFont.SelectedFontTag = Setup.Get("UiMotdFont")
             
-            CheckBlur.Checked = Setup.Get("UiBlur")
-            SliderBlurValue.Value = Setup.Get("UiBlurValue")
-            SliderBlurSamplingRate.Value = Setup.Get("UiBlurSamplingRate")
-            ComboBlurType.SelectedIndex = Setup.Get("UiBlurType")
-            PanBlurValue.Visibility = If(CheckBlur.Checked, Visibility.Visible, Visibility.Collapsed)
             ComboBackdropType.SelectedIndex = Setup.Get("UiBackdropType")
             HintBackdropUnsupported.Visibility = If(WindowInterop.IsMicaSupported(), Visibility.Collapsed, Visibility.Visible)
-            CheckLockWindowSize.Checked = Setup.Get("UiLockWindowSize")
 
             '背景图片
             SliderBackgroundOpacity.Value = Setup.Get("UiBackgroundOpacity")
@@ -203,10 +183,10 @@ Public Class PageSetupUI
     End Sub
 
     '将控件改变路由到设置改变
-    Private Shared Sub SliderChange(sender As MySlider, e As Object) Handles SliderBackgroundOpacity.Change, SliderBlurValue.Change, SliderBlurSamplingRate.Change, SliderBackgroundBlur.Change, SliderLauncherOpacity.Change, SliderMusicVolume.Change ', SliderLauncherHue.Change, SliderLauncherLight.Change, SliderLauncherSat.Change, SliderLauncherDelta.Change
+    Private Shared Sub SliderChange(sender As MySlider, e As Object) Handles SliderBackgroundOpacity.Change, SliderBackgroundBlur.Change, SliderMusicVolume.Change
         If AniControlEnabled = 0 Then Setup.Set(sender.Tag, sender.Value)
     End Sub
-    Private Shared Sub ComboChange(sender As MyComboBox, e As Object) Handles ComboDarkMode.SelectionChanged, ComboBackgroundSuit.SelectionChanged, ComboCustomPreset.SelectionChanged, ComboBlurType.SelectionChanged, ComboBackdropType.SelectionChanged
+    Private Shared Sub ComboChange(sender As MyComboBox, e As Object) Handles ComboDarkMode.SelectionChanged, ComboBackgroundSuit.SelectionChanged, ComboCustomPreset.SelectionChanged, ComboBackdropType.SelectionChanged
         If AniControlEnabled = 0 Then
             Setup.Set(sender.Tag, sender.SelectedIndex)
             ' 切换窗口材质时立即应用
@@ -217,9 +197,9 @@ Public Class PageSetupUI
         End If
     End Sub
     Private Shared Sub CheckBoxChange(sender As MyCheckBox, e As Object) Handles _
-    CheckLockWindowSize.Change, CheckBlur.Change, CheckAutoPauseVideo.Change,
+    CheckAutoPauseVideo.Change,
     CheckMusicStop.Change, CheckMusicRandom.Change, CheckMusicAuto.Change, CheckMusicStart.Change, CheckMusicSMTC.Change,
-    CheckBackgroundColorful.Change, CheckLogoLeft.Change, CheckLauncherLogo.Change,
+    CheckBackgroundColorful.Change, CheckLogoLeft.Change,
     CheckHiddenFunctionHidden.Change, CheckHiddenFunctionSelect.Change, CheckHiddenFunctionModUpdate.Change,
     CheckHiddenPageDownload.Change, CheckHiddenPageSetup.Change, CheckHiddenPageTools.Change,
     CheckHiddenSetupLaunch.Change, CheckHiddenSetupUI.Change, CheckHiddenLauncherMisc.Change, CheckHiddenSetupUpdate.Change, CheckHiddenSetupGameLink.Change,
@@ -227,7 +207,7 @@ Public Class PageSetupUI
     CheckHiddenToolsGameLink.Change, CheckHiddenToolsHelp.Change, CheckHiddenToolsTest.Change, CheckHiddenSetupJava.Change,
     CheckHiddenVersionEdit.Change, CheckHiddenVersionExport.Change, CheckHiddenVersionSave.Change,
     CheckHiddenVersionScreenshot.Change, CheckHiddenVersionMod.Change, CheckHiddenVersionResourcePack.Change,
-    CheckHiddenVersionShader.Change, CheckHiddenVersionSchematic.Change, CheckHiddenVersionServer.Change, CheckShowLaunchingHint.Change
+    CheckHiddenVersionShader.Change, CheckHiddenVersionSchematic.Change, CheckHiddenVersionServer.Change
 
         ' 仅在动画未运行或初始化完成时保存设置，防止初始化时的触发导致重复写入
         If AniControlEnabled = 0 Then
@@ -238,7 +218,7 @@ Public Class PageSetupUI
     Private Shared Sub TextBoxChange(sender As MyTextBox, e As Object) Handles TextLogoText.ValidatedTextChanged, TextCustomNet.ValidatedTextChanged
         If AniControlEnabled = 0 Then Setup.Set(sender.Tag, sender.Text)
     End Sub
-    Private Shared Sub RadioBoxChange(sender As MyRadioBox, e As Object) Handles RadioLogoType0.Check, RadioLogoType1.Check, RadioLogoType2.Check, RadioLogoType3.Check, RadioLauncherTheme0.Check, RadioLauncherTheme1.Check, RadioLauncherTheme2.Check, RadioLauncherTheme3.Check, RadioLauncherTheme4.Check, RadioLauncherTheme5.Check, RadioLauncherTheme6.Check, RadioLauncherTheme7.Check, RadioLauncherTheme8.Check, RadioLauncherTheme9.Check, RadioLauncherTheme10.Check, RadioLauncherTheme11.Check, RadioLauncherTheme12.Check, RadioLauncherTheme13.Check, RadioLauncherTheme14.Check, RadioCustomType0.Check, RadioCustomType1.Check, RadioCustomType2.Check, RadioCustomType3.Check
+    Private Shared Sub RadioBoxChange(sender As MyRadioBox, e As Object) Handles RadioLogoType0.Check, RadioLogoType1.Check, RadioLogoType2.Check, RadioLogoType3.Check, RadioCustomType0.Check, RadioCustomType1.Check, RadioCustomType2.Check, RadioCustomType3.Check
         Dim gotCfg = sender.Tag.ToString.Split("/")
         If AniControlEnabled = 0 Then Setup.Set(gotCfg(0), Integer.Parse(gotCfg(1)))
     End Sub
@@ -533,41 +513,23 @@ Refresh:
         ThemeRefresh()
     End Sub
 
-    '主题自定义
-    Private Sub RadioLauncherTheme14_Change(sender As Object, e As RouteEventArgs) Handles RadioLauncherTheme14.Changed
-        'If RadioLauncherTheme14.Checked Then
-        '    If LabLauncherHue.Visibility = Visibility.Visible Then Exit Sub
-        '    LabLauncherHue.Visibility = Visibility.Visible
-        '    SliderLauncherHue.Visibility = Visibility.Visible
-        '    LabLauncherSat.Visibility = Visibility.Visible
-        '    SliderLauncherSat.Visibility = Visibility.Visible
-        '    LabLauncherDelta.Visibility = Visibility.Visible
-        '    SliderLauncherDelta.Visibility = Visibility.Visible
-        '    LabLauncherLight.Visibility = Visibility.Visible
-        '    SliderLauncherLight.Visibility = Visibility.Visible
-        'Else
-        If LabLauncherHue.Visibility = Visibility.Collapsed Then Return
-        LabLauncherHue.Visibility = Visibility.Collapsed
-        SliderLauncherHue.Visibility = Visibility.Collapsed
-        LabLauncherSat.Visibility = Visibility.Collapsed
-        SliderLauncherSat.Visibility = Visibility.Collapsed
-        LabLauncherDelta.Visibility = Visibility.Collapsed
-        SliderLauncherDelta.Visibility = Visibility.Collapsed
-        LabLauncherLight.Visibility = Visibility.Collapsed
-        SliderLauncherLight.Visibility = Visibility.Collapsed
-        'End If
-        CardLauncher.TriggerForceResize()
-    End Sub
-    Private Sub HSL_Change() Handles SliderLauncherHue.Change, SliderLauncherLight.Change, SliderLauncherSat.Change, SliderLauncherDelta.Change
-        If AniControlEnabled <> 0 OrElse SliderLauncherSat Is Nothing OrElse Not SliderLauncherSat.IsLoaded Then Return
-#If False
-        If EnableCustomTheme Then
-            ColorHueTopbarDelta = SliderLauncherDelta.Value - 90
-            ColorLightAdjust = SliderLauncherLight.Value - 20
-        End If
-#End If
-        ThemeRefresh()
-    End Sub
+    '主题自定义（已移除相关控件）
+    'Private Sub RadioLauncherTheme14_Change(sender As Object, e As RouteEventArgs) Handles RadioLauncherTheme14.Changed
+    '    If LabLauncherHue.Visibility = Visibility.Collapsed Then Return
+    '    LabLauncherHue.Visibility = Visibility.Collapsed
+    '    SliderLauncherHue.Visibility = Visibility.Collapsed
+    '    LabLauncherSat.Visibility = Visibility.Collapsed
+    '    SliderLauncherSat.Visibility = Visibility.Collapsed
+    '    LabLauncherDelta.Visibility = Visibility.Collapsed
+    '    SliderLauncherDelta.Visibility = Visibility.Collapsed
+    '    LabLauncherLight.Visibility = Visibility.Collapsed
+    '    SliderLauncherLight.Visibility = Visibility.Collapsed
+    '    CardLauncher.TriggerForceResize()
+    'End Sub
+    'Private Sub HSL_Change() Handles SliderLauncherHue.Change, SliderLauncherLight.Change, SliderLauncherSat.Change, SliderLauncherDelta.Change
+    '    If AniControlEnabled <> 0 OrElse SliderLauncherSat Is Nothing OrElse Not SliderLauncherSat.IsLoaded Then Return
+    '    ThemeRefresh()
+    'End Sub
 
 #Region "功能隐藏"
 
@@ -606,7 +568,6 @@ Refresh:
                 FrmMain.PanTitleSelect.Visibility = Visibility.Visible
                 FrmMain.BtnTitleSelect1.Visibility = If(Not HiddenForceShow AndAlso conf.PageDownload, Visibility.Collapsed, Visibility.Visible)
                 FrmMain.BtnTitleSelect2.Visibility = If(Not HiddenForceShow AndAlso conf.PageSetup, Visibility.Collapsed, Visibility.Visible)
-                FrmMain.BtnTitleSelect3.Visibility = If(Not HiddenForceShow AndAlso conf.PageTools, Visibility.Collapsed, Visibility.Visible)
             End If
 
             ' 功能隐藏设置卡片
@@ -623,15 +584,14 @@ Refresh:
                 FrmSetupLeft.ItemLauncherMisc.Visibility = If(Not HiddenForceShow AndAlso conf.SetupLauncherMisc, Visibility.Collapsed, Visibility.Visible)
                 FrmSetupLeft.ItemJava.Visibility = If(Not HiddenForceShow AndAlso conf.SetupJava, Visibility.Collapsed, Visibility.Visible)
                 FrmSetupLeft.ItemUpdate.Visibility = If(Not HiddenForceShow AndAlso conf.SetupUpdate, Visibility.Collapsed, Visibility.Visible)
-                FrmSetupLeft.ItemGameLink.Visibility = If(Not HiddenForceShow AndAlso conf.SetupGameLink, Visibility.Collapsed, Visibility.Visible)
                 FrmSetupLeft.ItemAbout.Visibility = If(Not HiddenForceShow AndAlso conf.SetupAbout, Visibility.Collapsed, Visibility.Visible)
                 FrmSetupLeft.ItemFeedback.Visibility = If(Not HiddenForceShow AndAlso conf.SetupFeedback, Visibility.Collapsed, Visibility.Visible)
                 FrmSetupLeft.ItemLog.Visibility = If(Not HiddenForceShow AndAlso conf.SetupLog, Visibility.Collapsed, Visibility.Visible)
 
                 Dim categories = {
     (FrmSetupLeft.TextGameCategory, Not (conf.SetupLaunch AndAlso conf.SetupJava AndAlso conf.SetupGameManage)),
-    (FrmSetupLeft.TextToolsCategory, Not conf.SetupGameLink),
     (FrmSetupLeft.TextLauncherCategory, Not (conf.SetupUi AndAlso conf.SetupLauncherMisc)),
+    (FrmSetupLeft.TextToolboxCategory, True),
     (FrmSetupLeft.TextAboutCategory, Not (conf.SetupAbout AndAlso conf.SetupUpdate AndAlso conf.SetupFeedback AndAlso conf.SetupLog))
 }
 
@@ -735,41 +695,16 @@ Refresh:
 
 #End Region
 
-    '赞助
-    Private Sub BtnLauncherDonate_Click(sender As Object, e As EventArgs) Handles BtnLauncherDonate.Click
-        OpenWebsite("https://afdian.com/a/LTCat")
-    End Sub
+    '赞助（已移除相关控件）
+    'Private Sub BtnLauncherDonate_Click(sender As Object, e As EventArgs) Handles BtnLauncherDonate.Click
+    '    OpenWebsite("https://afdian.com/a/LTCat")
+    'End Sub
 
     '滑动条
     Private Sub SliderLoad()
         SliderMusicVolume.GetHintText = Function(v) Math.Ceiling(v * 0.1) & "%"
-        SliderLauncherOpacity.GetHintText = Function(v) Math.Round(40 + v * 0.1) & "%"
-        SliderLauncherHue.GetHintText = Function(v) v & "°"
-        SliderLauncherSat.GetHintText = Function(v) v & "%"
-        SliderLauncherDelta.GetHintText =
-        Function(Value As Integer) As String
-            If Value > 90 Then
-                Return "+" & (Value - 90)
-            ElseIf Value = 90 Then
-                Return 0
-            Else
-                Return Value - 90
-            End If
-        End Function
-        SliderLauncherLight.GetHintText =
-        Function(Value As Integer) As String
-            If Value > 20 Then
-                Return "+" & (Value - 20)
-            ElseIf Value = 20 Then
-                Return 0
-            Else
-                Return Value - 20
-            End If
-        End Function
         SliderBackgroundOpacity.GetHintText = Function(v) Math.Round(v * 0.1) & "%"
         SliderBackgroundBlur.GetHintText = Function(v) v & " 像素"
-        SliderBlurValue.GetHintText = Function(v) v & " 像素"
-        SliderBlurSamplingRate.GetHintText = Function(v) v & "%"
     End Sub
     Private Sub BtnHomepageMarket_Click(sender As Object, e As EventArgs) Handles BtnGotoHomepageMarket.Click
         FrmMain.PageChange(New FormMain.PageStackData With {.Page = FormMain.PageType.HomepageMarket})
