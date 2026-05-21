@@ -1,4 +1,4 @@
-﻿Imports PCL.Core.Utils
+Imports PCL.Core.Utils
 
 Public Class PageSetupFeedback
 
@@ -178,6 +178,6 @@ Public Class PageSetupFeedback
     End Sub
 
     Private Sub Feedback_Click(sender As Object, e As MouseButtonEventArgs)
-        PageSetupLeft.TryFeedback()
+        OpenWebsite("https://github.com/PCL-Community/PCL2-CE/issues/")
     End Sub
 End Class

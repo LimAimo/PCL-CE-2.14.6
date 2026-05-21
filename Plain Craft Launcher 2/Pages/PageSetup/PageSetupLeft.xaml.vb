@@ -15,8 +15,6 @@ Public Class PageSetupLeft
         If ItemUI.Checked AndAlso hide.SetupUi Then IsHiddenPage = True
         If ItemLauncherMisc.Checked AndAlso hide.SetupLauncherMisc Then IsHiddenPage = True
         If ItemAbout.Checked AndAlso hide.SetupAbout Then IsHiddenPage = True
-        If ItemUpdate.Checked AndAlso hide.SetupUpdate Then IsHiddenPage = True
-        If ItemFeedback.Checked AndAlso hide.SetupFeedback Then IsHiddenPage = True
         If ItemLog.Checked AndAlso hide.SetupLog Then IsHiddenPage = True
         If PageSetupUI.HiddenForceShow Then IsHiddenPage = False
         '若页面错误，或尚未加载，则继续
@@ -39,10 +37,6 @@ Public Class PageSetupLeft
             ItemLauncherMisc.SetChecked(True, False, False)
         ElseIf Not hideCfg.SetupAbout Then
             ItemAbout.SetChecked(True, False, False)            
-        ElseIf Not hideCfg.SetupUpdate Then
-            ItemUpdate.SetChecked(True, False, False)
-        ElseIf Not hideCfg.SetupFeedback Then
-            ItemFeedback.SetChecked(True, False, False)
         ElseIf Not hideCfg.SetupLog Then
             ItemLog.SetChecked(True, False, False)
         Else
@@ -75,10 +69,6 @@ Public Class PageSetupLeft
             PageID = FormMain.PageSubType.SetupLauncherMisc
         ElseIf Not hideCfg.SetupAbout Then
             PageID = FormMain.PageSubType.SetupAbout            
-        ElseIf Not hideCfg.SetupUpdate Then
-            PageID = FormMain.PageSubType.SetupUpdate
-        ElseIf Not hideCfg.SetupFeedback Then
-            PageID = FormMain.PageSubType.SetupFeedback
         ElseIf Not hideCfg.SetupLog Then
             PageID = FormMain.PageSubType.SetupLog
         Else
@@ -91,8 +81,8 @@ Public Class PageSetupLeft
     ''' 勾选事件改变页面。
     ''' </summary>
     Private Sub PageCheck(sender As MyListItem, e As EventArgs) Handles ItemLaunch.Check,
-        ItemGameManage.Check, ItemUI.Check, ItemAbout.Check, ItemFeedback.Check, ItemLog.Check,
-        ItemUpdate.Check, ItemJava.Check, ItemLauncherMisc.Check, ItemToolbox.Check
+        ItemGameManage.Check, ItemUI.Check, ItemAbout.Check, ItemLog.Check,
+        ItemJava.Check, ItemLauncherMisc.Check, ItemToolbox.Check
         '尚未初始化控件属性时，sender.Tag 为 Nothing，会跳过切换，且由于 PageID 默认为 0 而切换到第一个页面
         '若使用 IsLoaded，则会导致模拟点击不被执行（模拟点击切换页面时，控件的 IsLoaded 为 False）
         If sender.Tag IsNot Nothing Then PageChange(Val(sender.Tag))
@@ -113,18 +103,12 @@ Public Class PageSetupLeft
             Case FormMain.PageSubType.SetupGameManage
                 If FrmSetupGameManage Is Nothing Then FrmSetupGameManage = New PageSetupGameManage
                 Return FrmSetupGameManage
-            Case FormMain.PageSubType.SetupUpdate
-                If FrmSetupUpdate Is Nothing Then FrmSetupUpdate = New PageSetupUpdate
-                Return FrmSetupUpdate
             Case FormMain.PageSubType.SetupAbout
                 If FrmSetupAbout Is Nothing Then FrmSetupAbout = New PageSetupAbout
                 Return FrmSetupAbout
             Case FormMain.PageSubType.SetupLog
                 If FrmSetupLog Is Nothing Then FrmSetupLog = New PageSetupLog
                 Return FrmSetupLog
-            Case FormMain.PageSubType.SetupFeedback
-                If FrmSetupFeedback Is Nothing Then FrmSetupFeedback = New PageSetupFeedback
-                Return FrmSetupFeedback
             Case FormMain.PageSubType.SetupGameLink
                 If FrmToolsTest Is Nothing Then FrmToolsTest = New PageToolsTest
                 Return FrmToolsTest
@@ -208,26 +192,8 @@ Public Class PageSetupLeft
         End Select
     End Sub
 
-    Public Shared Sub TryFeedback() 'Handles ItemFeedback.Click
-        RunInNewThread(Sub()
-                           If Not CanFeedback(True) Then Return
-                           Select Case MyMsgBox("在提交新反馈前，建议先搜索反馈列表，以避免重复提交。" & vbCrLf & "如果无法打开该网页，请尝试使用加速器或 VPN。",
-                                       "反馈", "提交新反馈", "查看反馈列表", "取消")
-                               Case 1
-                                   Feedback(True, False)
-                               Case 2
-                                   OpenWebsite("https://github.com/PCL-Community/PCL2-CE/issues/")
-                           End Select
-                       End Sub)
-
-    End Sub
     Public Sub Refresh(sender As Object, e As EventArgs) '由边栏按钮匿名调用
         Select Case Val(sender.Tag)
-            Case FormMain.PageSubType.SetupFeedback
-                If FrmSetupFeedback IsNot Nothing Then
-                    FrmSetupFeedback.Loader.Start(IsForceRestart:=True)
-                End If
-                ItemFeedback.Checked = True
             Case FormMain.PageSubType.SetupJava
                 If FrmSetupJava IsNot Nothing Then
                     FrmSetupJava.Loader.Start(IsForceRestart:=True)
