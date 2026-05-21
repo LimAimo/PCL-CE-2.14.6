@@ -166,7 +166,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <controls:BlurBorder IsHitTestVisible="False">
+                    <controls:BlurBorder x:Name="BlurLeft" IsHitTestVisible="False" BlurRadius="16">
                         <local:AnimatedBackgroundGrid x:Name="RectLeftBackground" Width="0" BackgroundBrush="{DynamicResource ColorBrushTransparentBackground}" />
                     </controls:BlurBorder>
                     <Rectangle x:Name="RectLeftShadow" Width="4" HorizontalAlignment="Left" IsHitTestVisible="False" Grid.Column="1" >

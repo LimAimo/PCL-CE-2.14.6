@@ -286,6 +286,15 @@ PCL-Community 及其成员与龙腾猫跃无从属关系，且均不会为您的
             End If
             FrmMain.PanForm.Background.Freeze()
 
+            ' 侧边栏高斯模糊背景：使用更透明的背景色让模糊效果可见
+            Dim sidebarBrush = New SolidColorBrush(Color.FromArgb(
+                If(ThemeService.IsDarkMode, CByte(140), CByte(180)),
+                If(ThemeService.IsDarkMode, CByte(30), CByte(251)),
+                If(ThemeService.IsDarkMode, CByte(30), CByte(251)),
+                If(ThemeService.IsDarkMode, CByte(30), CByte(251))))
+            sidebarBrush.Freeze()
+            FrmMain.RectLeftBackground.BackgroundBrush = sidebarBrush
+
             ' 通用ContextMenu主题刷新
             RefreshAllContextMenuThemes()
             FrmMain.PanTitleSelect.Children.OfType(Of MyRadioButton)().ToList().ForEach(Sub(btn) btn.RefreshMyRadioButtonColor())
