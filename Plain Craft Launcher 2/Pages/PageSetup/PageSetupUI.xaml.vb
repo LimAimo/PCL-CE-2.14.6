@@ -284,8 +284,7 @@ Refresh:
         End Try
     End Sub
     Private Sub BtnCustomRefresh_Click() Handles BtnCustomRefresh.Click
-        FrmLaunchRight.ForceRefresh()
-        Hint("已刷新主页！", HintType.Finish)
+        Hint("主页功能已禁用，无法刷新", HintType.Finish)
     End Sub
     Private Sub BtnCustomTutorial_Click(sender As Object, e As EventArgs) Handles BtnCustomTutorial.Click
         MyMsgBox("1. 点击 生成教学文件 按钮，这会在 PCL 文件夹下生成 Custom.xaml 布局文件。" & vbCrLf &

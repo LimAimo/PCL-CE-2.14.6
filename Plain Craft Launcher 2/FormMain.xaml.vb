@@ -874,12 +874,7 @@ Public Class FormMain
                     End If
                 End If
                 CopyFile(FilePath, ExePath & "PCL\Custom.xaml")
-                RunInUi(
-                Sub()
-                    Setup.Set("UiCustomType", 1)
-                    FrmLaunchRight.ForceRefresh()
-                    Hint("已加载主页自定义文件！", HintType.Finish)
-                End Sub)
+                Hint("已加载主页自定义文件！（主页功能已禁用）", HintType.Finish)
                 Return
             End If
             '安装 Mod
