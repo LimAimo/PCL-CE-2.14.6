@@ -1439,9 +1439,9 @@ Public Class FormMain
                     If FrmDownloadLeft Is Nothing Then FrmDownloadLeft = New PageDownloadLeft
                     'PageGet 方法会在未设置 SubType 时指定默认值，并建立相关页面的实例
                     PageChangeAnim(FrmDownloadLeft, FrmDownloadLeft.PageGet(SubType))
-                Case PageType.Tools '联机
-                    If FrmToolsLeft Is Nothing Then FrmToolsLeft = New PageToolsLeft
-                    PageChangeAnim(FrmToolsLeft, FrmToolsLeft.PageGet(SubType))
+                Case PageType.Tools '百宝箱
+                    If FrmToolsTest Is Nothing Then FrmToolsTest = New PageToolsTest
+                    PageChangeAnim(New MyPageLeft, FrmToolsTest)
                 Case PageType.Setup '设置
                     If FrmSetupLeft Is Nothing Then FrmSetupLeft = New PageSetupLeft
                     PageChangeAnim(FrmSetupLeft, FrmSetupLeft.PageGet(SubType))
