@@ -9,8 +9,8 @@ Public Class PageLaunchRight
         PanLog.Visibility = If(ModeDebug, Visibility.Visible, Visibility.Collapsed)
         '社区版提示
         PanHint.Visibility = If(Setup.Get("UiLauncherCEHint"), Visibility.Visible, Visibility.Collapsed)
-        LabHint1.Text = $"你正在使用 PCL 社区版！此版本为独立开发和维护，与官方版本维护路线不同，体验有所出入。{vbCrLf}{vbCrLf}如果你是意外下载到了社区版，我们十分建议您下载 PCL 官方版长期使用，此发行版本对新手用户体验可能不友好。{vbCrLf}此外，社区版的问题请向社区版的仓库提交 Issue，不要向官方仓库反馈社区版的问题哦！{vbCrLf}"
-        LabHint2.Text = $"若要永久隐藏此提示，请输入正确的 PCL CE 开发组织名称。"
+        LabHint1.Text = $"你正在使用 PCL 社区版的二次更改版本！此版本为独立开发和维护，与官方版本维护路线不同，体验有所出入。{vbCrLf}{vbCrLf}如果你是意外下载到了二次修改版本，我们十分建议您下载 PCL 官方版长期使用，此发行版本对新手用户体验可能不友好。{vbCrLf}此外，这个版本由个人偏好进行了魔改，如果遇到问题，不要向官方仓库反馈社区版的问题哦！{vbCrLf}"
+        
     End Sub
 
     '暂时关闭快照版提示
