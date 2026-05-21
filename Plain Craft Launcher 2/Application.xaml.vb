@@ -46,8 +46,6 @@ Public Class Application
                 End If
             End If
             '初始化文件结构
-            Directory.CreateDirectory(ExePath & "PCL\Pictures")
-            Directory.CreateDirectory(ExePath & "PCL\Musics")
             Directory.CreateDirectory(PathTemp & "Cache")
             Directory.CreateDirectory(PathTemp & "Download")
             Directory.CreateDirectory(PathAppdata)

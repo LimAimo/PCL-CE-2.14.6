@@ -80,20 +80,6 @@ Public Class PageSetupUI
             ComboBackdropType.SelectedIndex = Setup.Get("UiBackdropType")
             HintBackdropUnsupported.Visibility = If(WindowInterop.IsMicaSupported(), Visibility.Collapsed, Visibility.Visible)
 
-            '背景图片
-            SliderBackgroundOpacity.Value = Setup.Get("UiBackgroundOpacity")
-            SliderBackgroundBlur.Value = Setup.Get("UiBackgroundBlur")
-            ComboBackgroundSuit.SelectedIndex = Setup.Get("UiBackgroundSuit")
-            CheckBackgroundColorful.Checked = Setup.Get("UiBackgroundColorful")
-            Dim autoPauseVideo = Setup.Get("UiAutoPauseVideo")
-            CheckAutoPauseVideo.Checked = autoPauseVideo
-            If ModVideoBack.IsGaming = True Then
-                If autoPauseVideo = True Then
-                    BtnBackgroundRefresh.IsEnabled = False
-                End If
-            End If
-            BackgroundRefresh(False, False)
-
             '标题栏
             CType(FindName("RadioLogoType" & Setup.Get("UiLogoType")), MyRadioBox).Checked = True
             CheckLogoLeft.Visibility = If(RadioLogoType0.Checked, Visibility.Visible, Visibility.Collapsed)
@@ -101,15 +87,6 @@ Public Class PageSetupUI
             PanLogoChange.Visibility = If(RadioLogoType3.Checked, Visibility.Visible, Visibility.Collapsed)
             TextLogoText.Text = Setup.Get("UiLogoText")
             CheckLogoLeft.Checked = Setup.Get("UiLogoLeft")
-
-            '背景音乐
-            CheckMusicRandom.Checked = Setup.Get("UiMusicRandom")
-            CheckMusicAuto.Checked = Setup.Get("UiMusicAuto")
-            CheckMusicStop.Checked = Setup.Get("UiMusicStop")
-            CheckMusicStart.Checked = Setup.Get("UiMusicStart")
-            CheckMusicSMTC.Checked = Setup.Get("UiMusicSMTC")
-            SliderMusicVolume.Value = Setup.Get("UiMusicVolume")
-            MusicRefreshUI()
 
             '主页
             Try
@@ -183,10 +160,10 @@ Public Class PageSetupUI
     End Sub
 
     '将控件改变路由到设置改变
-    Private Shared Sub SliderChange(sender As MySlider, e As Object) Handles SliderBackgroundOpacity.Change, SliderBackgroundBlur.Change, SliderMusicVolume.Change
+    Private Shared Sub SliderChange(sender As MySlider, e As Object)
         If AniControlEnabled = 0 Then Setup.Set(sender.Tag, sender.Value)
     End Sub
-    Private Shared Sub ComboChange(sender As MyComboBox, e As Object) Handles ComboDarkMode.SelectionChanged, ComboBackgroundSuit.SelectionChanged, ComboCustomPreset.SelectionChanged, ComboBackdropType.SelectionChanged
+    Private Shared Sub ComboChange(sender As MyComboBox, e As Object) Handles ComboDarkMode.SelectionChanged, ComboCustomPreset.SelectionChanged, ComboBackdropType.SelectionChanged
         If AniControlEnabled = 0 Then
             Setup.Set(sender.Tag, sender.SelectedIndex)
             ' 切换窗口材质时立即应用
@@ -197,9 +174,7 @@ Public Class PageSetupUI
         End If
     End Sub
     Private Shared Sub CheckBoxChange(sender As MyCheckBox, e As Object) Handles _
-    CheckAutoPauseVideo.Change,
-    CheckMusicStop.Change, CheckMusicRandom.Change, CheckMusicAuto.Change, CheckMusicStart.Change, CheckMusicSMTC.Change,
-    CheckBackgroundColorful.Change, CheckLogoLeft.Change,
+    CheckLogoLeft.Change,
     CheckHiddenFunctionHidden.Change, CheckHiddenFunctionSelect.Change, CheckHiddenFunctionModUpdate.Change,
     CheckHiddenPageDownload.Change, CheckHiddenPageSetup.Change, CheckHiddenPageTools.Change,
     CheckHiddenSetupLaunch.Change, CheckHiddenSetupUI.Change, CheckHiddenLauncherMisc.Change, CheckHiddenSetupUpdate.Change, CheckHiddenSetupGameLink.Change,
@@ -233,122 +208,6 @@ Public Class PageSetupUI
         If AniControlEnabled = 0 Then
             Setup.Set("UiMotdFont", ComboUiMotdFont.SelectedFontTag)
         End If
-    End Sub
-
-    '背景图片
-    Private Sub BtnUIBgOpen_Click(sender As Object, e As EventArgs) Handles BtnBackgroundOpen.Click
-        OpenExplorer(ExePath & "PCL\Pictures\")
-    End Sub
-    Private Sub BtnBackgroundRefresh_Click(sender As Object, e As EventArgs) Handles BtnBackgroundRefresh.Click
-        BackgroundRefresh(True, True)
-    End Sub
-    Public Sub BackgroundRefreshUI(Show As Boolean, Count As Integer)
-        If IsNothing(PanBackgroundOpacity) Then Return
-        If Show Then
-            PanBackgroundOpacity.Visibility = Visibility.Visible
-            PanBackgroundBlur.Visibility = Visibility.Visible
-            PanBackgroundSuit.Visibility = Visibility.Visible
-            BtnBackgroundClear.Visibility = Visibility.Visible
-            CheckAutoPauseVideo.Visibility = Visibility.Visible
-            CardBackground.Title = "背景图片/视频（" & Count & " 张）"
-        Else
-            PanBackgroundOpacity.Visibility = Visibility.Collapsed
-            PanBackgroundBlur.Visibility = Visibility.Collapsed
-            PanBackgroundSuit.Visibility = Visibility.Collapsed
-            BtnBackgroundClear.Visibility = Visibility.Collapsed
-            CheckAutoPauseVideo.Visibility = Visibility.Collapsed
-            CardBackground.Title = "背景图片/视频"
-        End If
-        CardBackground.TriggerForceResize()
-    End Sub
-    Private Sub BtnBackgroundClear_Click(sender As Object, e As EventArgs) Handles BtnBackgroundClear.Click
-        If MyMsgBox("即将删除背景内容文件夹中的所有文件。" & vbCrLf & "此操作不可撤销，是否确定？", "警告",, "取消", IsWarn:=True) = 1 Then
-            DeleteDirectory(ExePath & "PCL\Pictures")
-            BackgroundRefresh(False, True)
-            Hint("背景内容已清空！", HintType.Finish)
-        End If
-    End Sub
-    ''' <summary>
-    ''' 刷新背景图片及设置页 UI。
-    ''' </summary>
-    ''' <param name="IsHint">是否显示刷新提示。</param>
-    ''' <param name="Refresh">是否刷新图片显示。</param>
-    Public Shared Sub BackgroundRefresh(IsHint As Boolean, Refresh As Boolean)
-        Try
-
-            '获取可用的图片文件
-            Directory.CreateDirectory(ExePath & "PCL\Pictures\")
-            Dim Pic As List(Of String) = EnumerateFiles(ExePath & "PCL\Pictures\").
-                    Where(Function(file) Not (file.Extension.Equals(".ini", StringComparison.OrdinalIgnoreCase) OrElse 
-                                       file.Extension.Equals(".db", StringComparison.OrdinalIgnoreCase))).
-                    Select(Function(file) file.FullName).
-                    ToList() 
-            '视频加载异常处理
-
-            Dim videoHandler As EventHandler(Of ExceptionRoutedEventArgs) = 
-                    Sub(sender, e)
-                        Dim videoEx = e.ErrorException
-                        Dim videoAddress As String = FrmMain.VideoBack.Source.ToString()
-                        If FrmMain.VideoBack.Source IsNot Nothing Then
-                            VideoStop()
-                            
-                            If videoEx.Message.Contains("0xC00D109B") Then
-                                Log("刷新背景内容失败，该视频文件可能并非 H.264（AVC） 格式。" & vbCrLf &
-                                    "你可以尝试使用视频转码工具打开视频文件并设定目标格式为 H.264（AVC） ，然后转码该视频。" & vbCrLf &
-                                    "文件：" & videoAddress, LogLevel.Msgbox)
-                            Else
-                                Log(videoEx, "刷新背景内容失败（" & videoAddress & "）", LogLevel.Msgbox)
-                            End If
-                        End If
-                    End Sub
-            RemoveHandler FrmMain.VideoBack.MediaFailed, videoHandler
-            RemoveHandler ModVideoBack.GamingStateChanged, AddressOf OnGamingStateChanged
-            RemoveHandler ModVideoBack.ForcePlayChanged, AddressOf OnForcePlayChanged
-            AddHandler ModVideoBack.GamingStateChanged, AddressOf OnGamingStateChanged
-            AddHandler ModVideoBack.ForcePlayChanged, AddressOf OnForcePlayChanged
-            If Setup.Get("UiAutoPauseVideo") = False Then ModVideoBack.ForcePlay = True
-            '加载
-            If Pic.Count = 0 Then
-                If Refresh Then
-                    If FrmMain.ImgBack.Visibility = Visibility.Collapsed Then
-                        If IsHint Then Hint("未检测到可用背景内容！", HintType.Critical)
-                    Else
-                        FrmMain.ImgBack.Visibility = Visibility.Collapsed
-                        If IsHint Then Hint("背景内容已清除！", HintType.Finish)
-                    End If
-                End If
-                If Not IsNothing(FrmSetupUI) Then FrmSetupUI.BackgroundRefreshUI(False, 0)
-            Else
-                If Refresh Then
-                    Dim Address As String = RandomUtils.PickRandom(Pic)
-                    Try
-                        FrmMain.ImgBack.Background = Nothing
-                        VideoStop()
-                        Log("[UI] 加载背景内容：" & Address)
-                        FrmMain.ImgBack.Background = New MyBitmap(Address)
-                        Setup.Load("UiBackgroundSuit", True)
-                        FrmMain.ImgBack.Visibility = Visibility.Visible
-                        If IsHint Then Hint("背景内容已刷新：" & GetFileNameFromPath(Address), HintType.Finish, False)
-                    Catch ex As Exception
-                        Try
-                            AddHandler FrmMain.VideoBack.MediaFailed, videoHandler
-                            Log(ex,"[UI] 加载背景图片失败" & Address)
-                            If ModeDebug Then Hint("图片加载失败，尝试将文件作为视频播放：" & Address)
-                            FrmMain.ImgBack.Visibility = Visibility.Visible
-                            FrmMain.VideoBack.Source = New Uri(Address, UriKind.Absolute)
-                            VideoPlay()
-                            If IsHint Then Hint("背景内容已刷新：" & GetFileNameFromPath(Address), HintType.Finish, False)
-                        Catch playEx As Exception
-                            Log(playEx,"播放背景内容时出现未知错误：")
-                        End Try
-                    End Try
-                End If
-                If Not IsNothing(FrmSetupUI) Then FrmSetupUI.BackgroundRefreshUI(True, Pic.Count)
-            End If
-
-        Catch ex As Exception
-            Log(ex, "刷新背景内容时出现未知错误", LogLevel.Feedback)
-        End Try
     End Sub
 
     '顶部栏
@@ -421,64 +280,6 @@ Refresh:
         Catch ex As Exception
             Log(ex, "清空标题栏图片失败", LogLevel.Msgbox)
         End Try
-    End Sub
-
-    '背景音乐
-    Private Sub BtnMusicOpen_Click(sender As Object, e As EventArgs) Handles BtnMusicOpen.Click
-        OpenExplorer(ExePath & "PCL\Musics\")
-    End Sub
-    Private Sub BtnMusicRefresh_Click(sender As Object, e As EventArgs) Handles BtnMusicRefresh.Click
-        MusicRefreshPlay(True)
-    End Sub
-    Public Sub MusicRefreshUI()
-        If PanBackgroundOpacity Is Nothing Then Return
-        If MusicAllList.Any Then
-            PanMusicVolume.Visibility = Visibility.Visible
-            PanMusicDetail.Visibility = Visibility.Visible
-            BtnMusicClear.Visibility = Visibility.Visible
-            CardMusic.Title = "背景音乐（" & EnumerateFiles(ExePath & "PCL\Musics\").Count & " 首）"
-        Else
-            PanMusicVolume.Visibility = Visibility.Collapsed
-            PanMusicDetail.Visibility = Visibility.Collapsed
-            BtnMusicClear.Visibility = Visibility.Collapsed
-            CardMusic.Title = "背景音乐"
-        End If
-        CardMusic.TriggerForceResize()
-    End Sub
-    Private Sub BtnMusicClear_Click(sender As Object, e As EventArgs) Handles BtnMusicClear.Click
-        If MyMsgBox("即将删除背景音乐文件夹中的所有文件。" & vbCrLf & "此操作不可撤销，是否确定？", "警告",, "取消", IsWarn:=True) = 1 Then
-            RunInThread(
-            Sub()
-                Hint("正在删除背景音乐……")
-                '停止播放音乐
-                MusicNAudio = Nothing
-                MusicWaitingList = New List(Of String)
-                MusicAllList = New List(Of String)
-                Thread.Sleep(200)
-                '删除文件
-                Try
-                    DeleteDirectory(ExePath & "PCL\Musics")
-                    'DisableSMTCSupport()
-                    Hint("背景音乐已删除！", HintType.Finish)
-                Catch ex As Exception
-                    Log(ex, "删除背景音乐失败", LogLevel.Msgbox)
-                End Try
-                Try
-                    Directory.CreateDirectory(ExePath & "PCL\Musics")
-                    RunInUi(Sub() MusicRefreshPlay(False))
-                Catch ex As Exception
-                    Log(ex, "重建背景音乐文件夹失败", LogLevel.Msgbox)
-                End Try
-            End Sub)
-        End If
-    End Sub
-    Private Sub CheckMusicStart_Change() Handles CheckMusicStart.Change
-        If AniControlEnabled <> 0 Then Return
-        If CheckMusicStart.Checked Then CheckMusicStop.Checked = False
-    End Sub
-    Private Sub CheckMusicStop_Change() Handles CheckMusicStop.Change
-        If AniControlEnabled <> 0 Then Return
-        If CheckMusicStop.Checked Then CheckMusicStart.Checked = False
     End Sub
 
     '主页
@@ -702,9 +503,6 @@ Refresh:
 
     '滑动条
     Private Sub SliderLoad()
-        SliderMusicVolume.GetHintText = Function(v) Math.Ceiling(v * 0.1) & "%"
-        SliderBackgroundOpacity.GetHintText = Function(v) Math.Round(v * 0.1) & "%"
-        SliderBackgroundBlur.GetHintText = Function(v) v & " 像素"
     End Sub
     Private Sub BtnHomepageMarket_Click(sender As Object, e As EventArgs) Handles BtnGotoHomepageMarket.Click
         FrmMain.PageChange(New FormMain.PageStackData With {.Page = FormMain.PageType.HomepageMarket})

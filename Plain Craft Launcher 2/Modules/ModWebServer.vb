@@ -184,15 +184,6 @@ Public Module ModWebServer
         End Function
     End Class
 
-    Private ReadOnly ChangeLock As New Object
-    Private PicAddress As String
-    Public Function BackgroundPicChangeCallback(Pic As String)
-        SyncLock ChangeLock
-            PicAddress = Pic
-            Return True
-        End SyncLock
-    End Function
-
     Public Class OAuthCompleteStatus
         Public Property success As Boolean = False
         Public Property username As String
@@ -216,11 +207,7 @@ Public Module ModWebServer
                 SyncLock _webServers
                     Dim server As NaidCallbackServer = Nothing
                     '寻找可用端口号创建服务端实例
-                    Dim currentPicAddress As String
-                    SyncLock ChangeLock
-                        currentPicAddress = PicAddress
-                    End SyncLock
-                    server = New NaidCallbackServer(serviceName, completeCallback, currentPicAddress)
+                    server = New NaidCallbackServer(serviceName, completeCallback, Nothing)
                     ServerPort = server.Port
                     Log($"[OAuth] {serviceName}: 已开始监听 {server.Port} 端口，正在初始化路由")
                     '开始响应请求

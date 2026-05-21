@@ -86,37 +86,7 @@ Public Module ModMusic
     Private Sub MusicRefreshUI()
         RunInUi(Sub()
                     Try
-                        If Not MusicAllList?.Any() = True Then
-                            FrmMain.BtnExtraMusic.Show = False
-                        Else
-                            FrmMain.BtnExtraMusic.Show = True
-                            Dim fileName = GetFileNameWithoutExtentionFromPath(MusicCurrent)
-                            Dim isSingle = MusicAllList.Count = 1
-                            Dim tipText As String
-
-                            If MusicState = MusicStates.Pause Then
-                                FrmMain.BtnExtraMusic.Logo = Logo.IconPlay
-                                FrmMain.BtnExtraMusic.LogoScale = 0.8
-                                tipText = $"已暂停：{fileName}"
-                                tipText &= vbCrLf & If(isSingle,
-                                    "左键恢复播放，右键重新从头播放。",
-                                    "左键恢复播放，右键播放下一曲。")
-                            Else
-                                FrmMain.BtnExtraMusic.Logo = Logo.IconMusic
-                                FrmMain.BtnExtraMusic.LogoScale = 1
-                                tipText = $"正在播放：{fileName}"
-                                tipText &= vbCrLf & If(isSingle,
-                                    "左键暂停，右键重新从头播放。",
-                                    "左键暂停，右键播放下一曲。")
-                            End If
-
-                            FrmMain.BtnExtraMusic.ToolTip = tipText
-                            ToolTipService.SetVerticalOffset(FrmMain.BtnExtraMusic,
-                                If(tipText.Contains(vbLf), 10, 16))
-                        End If
-
-                        FrmSetupUI?.MusicRefreshUI()
-
+                        ' BtnExtraMusic and MusicRefreshUI on setup page removed
                     Catch ex As Exception
                         Log(ex, "刷新背景音乐 UI 失败", LogLevel.Feedback)
                     End Try
@@ -297,10 +267,7 @@ Public Module ModMusic
                 End If
 
                 ' 更新进度条
-                If reader.TotalTime.TotalMilliseconds > 0 Then
-                    Dim progress = reader.CurrentTime.TotalMilliseconds / reader.TotalTime.TotalMilliseconds
-                    RunInUi(Sub() FrmMain.BtnExtraMusic.Progress = progress)
-                End If
+                ' Progress bar removed with BtnExtraMusic
 
                 Thread.Sleep(100)
             End While

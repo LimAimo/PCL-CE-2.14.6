@@ -271,16 +271,6 @@ PCL-Community 及其成员与龙腾猫跃无从属关系，且均不会为您的
                     themeColor.R, themeColor.G, themeColor.B))
                 titleBrush.Freeze()
                 FrmMain.PanTitle.BackgroundBrush = titleBrush
-            ElseIf Setup.Get("UiBackgroundColorful") Then
-                Dim Brush = New LinearGradientBrush With {.EndPoint = New Point(0.1, 1), .StartPoint = New Point(0.9, 0)}
-                Dim hue = ThemeService.GetCurrentThemeArgs().Hue
-                Dim hue1 = hue - 15
-                Dim hue2 = hue + 15
-                Dim tone = ThemeService.CurrentTone
-                Brush.GradientStops.Add(New GradientStop With {.Offset = -0.1, .Color = LabColor.FromLch(GetDarkThemeLight(0.84), tone.C5, hue1)})
-                Brush.GradientStops.Add(New GradientStop With {.Offset = 0.4, .Color = LabColor.FromLch(GetDarkThemeLight(0.96), tone.C7, hue)})
-                Brush.GradientStops.Add(New GradientStop With {.Offset = 1.1, .Color = LabColor.FromLch(GetDarkThemeLight(0.84), tone.C5, hue2)})
-                FrmMain.PanForm.Background = Brush
             Else
                 FrmMain.PanForm.Background = Application.Current.Resources("ColorBrushBackground")
             End If

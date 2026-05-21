@@ -133,14 +133,9 @@ Public Class FormMain
         ApplicationStartTick = TimeUtils.GetTimeTick()
         FrmHandle = New WindowInteropHelper(Me).Handle
         '读取设置
-        Setup.Load("UiBackgroundOpacity")
-        Setup.Load("UiBackgroundBlur")
         Setup.Load("UiLogoType")
         Setup.Load("UiHiddenPageDownload")
-        Setup.Load("UiAutoPauseVideo") '智能暂停视频背景
         PageSetupUI.HiddenRefresh()
-        PageSetupUI.BackgroundRefresh(False, True)
-        MusicRefreshPlay(False, True)
         '扩展按钮
         BtnExtraUpdateRestart.ShowCheck = AddressOf BtnExtraUpdateRestart_ShowCheck
         BtnExtraDownload.ShowCheck = AddressOf BtnExtraDownload_ShowCheck
@@ -534,10 +529,7 @@ Public Class FormMain
         '关闭
         RunInUiWait(
         Sub()
-            '清理视频背景
-            VideoBack.Stop()
-            VideoBack.Source = Nothing
-            VideoBack.Close()
+            '清理
             IsHitTestVisible = False
             If RenderTransform Is Nothing Then
                 Dim TransformPos As New TranslateTransform(0, 0)
@@ -629,9 +621,6 @@ Public Class FormMain
             Else
                 PanMain.Height = formHeight
             End If
-
-            VideoBack.Width = formWidth
-            VideoBack.Height = formHeight
         End If
         If WindowState = WindowState.Maximized Then WindowState = WindowState.Normal '修复 #1938
     End Sub
@@ -1072,20 +1061,13 @@ Public Class FormMain
             Log($"[System] 窗口已置顶，位置：({Left}, {Top}), {Width} x {Height}")
         End Sub)
     End Sub
-    '背景视频循环播放
-    Private Sub VideoEnded(sender As Object, e As RoutedEventArgs)
-        VideoBack.Position = TimeSpan.Zero
-        VideoBack.Play()
-    End Sub
-    '最小化时暂停背景视频
+    '最小化时的处理
     Private Sub WindowStateChanged(sender As Object, e As EventArgs) Handles Me.StateChanged
         Select Case Me.WindowState
             Case WindowState.Minimized
                 ModVideoBack.IsMinimized = True
-                VideoPause()
             Case WindowState.Normal
                 ModVideoBack.IsMinimized = False
-                VideoPlay()
         End Select
     End Sub
 
@@ -1631,14 +1613,6 @@ Public Class FormMain
         Return IsUpdateWaitingRestart
     End Function
     
-    '音乐
-    Private Sub BtnExtraMusic_Click(sender As Object, e As EventArgs) Handles BtnExtraMusic.Click
-        MusicControlPause()
-    End Sub
-    Private Sub BtnExtraMusic_RightClick(sender As Object, e As EventArgs) Handles BtnExtraMusic.RightClick
-        MusicControlNext()
-    End Sub
-
     '任务管理
     Private Sub BtnExtraDownload_Click(sender As Object, e As EventArgs) Handles BtnExtraDownload.Click
         PageChange(PageType.TaskManager)

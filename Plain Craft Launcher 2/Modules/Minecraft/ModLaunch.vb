@@ -2476,15 +2476,6 @@ NextInstance:
     Private Sub McLaunchEnd()
         McLaunchLog("开始启动结束处理")
 
-        '暂停或开始音乐播放
-        If Setup.Get("UiMusicStop") Then
-            RunInUi(Sub() If MusicPause() Then Log("[Music] 已根据设置，在启动后暂停音乐播放"))
-        ElseIf Setup.Get("UiMusicStart") Then
-            RunInUi(Sub() If MusicResume() Then Log("[Music] 已根据设置，在启动后开始音乐播放"))
-        End If
-        '暂停视频背景播放
-        ModVideoBack.IsGaming = True
-        VideoPause()
         '启动器可见性
         McLaunchLog("启动器可见性：" & Setup.Get("LaunchArgumentVisible"))
         Select Case Setup.Get("LaunchArgumentVisible")
