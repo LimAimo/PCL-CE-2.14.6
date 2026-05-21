@@ -259,7 +259,13 @@ PCL-Community 及其成员与龙腾猫跃无从属关系，且均不会为您的
             End If
 #End If
             '主页面背景
-            If Setup.Get("UiBackgroundColorful") Then
+            Dim backdropType As WindowBackdropType = Config.Preference.Blur.BackdropType
+            If backdropType <> WindowBackdropType.None AndAlso WindowInterop.IsMicaSupported() Then
+                ' 使用系统 Mica/Acrylic 背景时，设置半透明背景让系统材质透出
+                Dim bgBrush = New SolidColorBrush(Color.FromArgb(If(ThemeService.IsDarkMode, CByte(20), CByte(40)), CByte(255), CByte(255), CByte(255)))
+                bgBrush.Freeze()
+                FrmMain.PanForm.Background = bgBrush
+            ElseIf Setup.Get("UiBackgroundColorful") Then
                 Dim Brush = New LinearGradientBrush With {.EndPoint = New Point(0.1, 1), .StartPoint = New Point(0.9, 0)}
                 Dim hue = ThemeService.GetCurrentThemeArgs().Hue
                 Dim hue1 = hue - 15

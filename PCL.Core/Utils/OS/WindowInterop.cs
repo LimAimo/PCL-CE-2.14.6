@@ -48,6 +48,34 @@ public static partial class WindowInterop
         out uint dpiY
     );
 
+    // DWM 窗口属性 (Windows 11 Mica/Backdrop)
+    private enum DWMWINDOWATTRIBUTE
+    {
+        DWMWA_USE_IMMERSIVE_DARK_MODE = 20,
+        DWMWA_SYSTEMBACKDROP_TYPE = 38,
+        DWMWA_MICA_EFFECT = 1029
+    }
+
+    /// <summary>
+    /// 系统背景类型 (Windows 11 22H2+)
+    /// </summary>
+    public enum DwmSystemBackdropType
+    {
+        /// <summary>自动（跟随系统）</summary>
+        Auto = 0,
+        /// <summary>无背景效果</summary>
+        None = 1,
+        /// <summary>Mica 云母效果</summary>
+        Mica = 2,
+        /// <summary>Acrylic 亚克力效果</summary>
+        Acrylic = 3,
+        /// <summary>Mica Alt 云母变体（颜色更深）</summary>
+        MicaAlt = 4
+    }
+
+    [LibraryImport("dwmapi.dll")]
+    private static partial int DwmSetWindowAttribute(IntPtr hwnd, int dwAttribute, ref int pvAttribute, int cbAttribute);
+
     // ReSharper enable InconsistentNaming UnusedMember.Local
 
     /// <summary>
@@ -121,4 +149,37 @@ public static partial class WindowInterop
         // fallback to default DPI (96)
         return 96;
     }
+
+    /// <summary>
+    /// 设置窗口的系统背景类型（Mica/Acrylic），需要 Windows 11 22H2+。
+    /// </summary>
+    /// <param name="hWnd">窗口句柄</param>
+    /// <param name="backdropType">背景类型</param>
+    /// <returns>是否设置成功</returns>
+    public static bool SetSystemBackdropType(IntPtr hWnd, DwmSystemBackdropType backdropType)
+    {
+        if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22621)) return false;
+        var value = (int)backdropType;
+        var hr = DwmSetWindowAttribute(hWnd, (int)DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE, ref value, sizeof(int));
+        return hr == 0;
+    }
+
+    /// <summary>
+    /// 设置窗口是否使用沉浸式深色模式（影响 Mica 的颜色）。
+    /// </summary>
+    /// <param name="hWnd">窗口句柄</param>
+    /// <param name="useDarkMode">是否使用深色模式</param>
+    /// <returns>是否设置成功</returns>
+    public static bool SetImmersiveDarkMode(IntPtr hWnd, bool useDarkMode)
+    {
+        if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 18985)) return false;
+        var value = useDarkMode ? 1 : 0;
+        var hr = DwmSetWindowAttribute(hWnd, (int)DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE, ref value, sizeof(int));
+        return hr == 0;
+    }
+
+    /// <summary>
+    /// 检测当前系统是否支持 Mica 背景效果。
+    /// </summary>
+    public static bool IsMicaSupported() => OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22621);
 }

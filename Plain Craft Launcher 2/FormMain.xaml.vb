@@ -38,7 +38,11 @@ Public Class FormMain
         '刷新主题
         'ThemeCheckAll(False)
         'ThemeRefreshColor()
-        AddHandler ThemeService.ColorModeChanged, Sub(mode, theme) ThemeRefresh()
+        AddHandler ThemeService.ColorModeChanged, Sub(mode, theme)
+                                                       ThemeRefresh()
+                                                       ' 更新 DWM 深色模式属性以匹配 Mica 颜色
+                                                       ApplySystemBackdrop()
+                                                   End Sub
         AddHandler ThemeService.ColorThemeChanged, AddressOf ThemeRefresh
         '窗体参数初始化
         FrmMain = Me
@@ -465,6 +469,36 @@ Public Class FormMain
         Catch ex As Exception
             LogWrapper.Error("DWM 窗口框架应用失败: " & ex.Message)
         End Try
+        ' 应用系统背景材质 (Mica/Acrylic)
+        ApplySystemBackdrop(hwnd)
+    End Sub
+
+    ''' <summary>
+    ''' 应用系统背景材质效果（Mica/Acrylic）。需要 Windows 11 22H2+。
+    ''' </summary>
+    Friend Shared Sub ApplySystemBackdrop(Optional hwnd As IntPtr = Nothing)
+        If Not WindowInterop.IsMicaSupported() Then Return
+        If hwnd = IntPtr.Zero Then
+            hwnd = New WindowInteropHelper(FrmMain).Handle
+        End If
+        If hwnd = IntPtr.Zero Then Return
+
+        Dim backdropType As WindowBackdropType = Config.Preference.Blur.BackdropType
+        ' 设置深色模式属性（影响 Mica 颜色）
+        WindowInterop.SetImmersiveDarkMode(hwnd, ThemeService.IsDarkMode)
+        ' 映射配置枚举到 DWM 枚举
+        Dim dwmBackdrop As WindowInterop.DwmSystemBackdropType
+        Select Case backdropType
+            Case WindowBackdropType.Mica
+                dwmBackdrop = WindowInterop.DwmSystemBackdropType.Mica
+            Case WindowBackdropType.MicaAlt
+                dwmBackdrop = WindowInterop.DwmSystemBackdropType.MicaAlt
+            Case WindowBackdropType.Acrylic
+                dwmBackdrop = WindowInterop.DwmSystemBackdropType.Acrylic
+            Case Else
+                dwmBackdrop = WindowInterop.DwmSystemBackdropType.None
+        End Select
+        WindowInterop.SetSystemBackdropType(hwnd, dwmBackdrop)
     End Sub
 
     '关闭

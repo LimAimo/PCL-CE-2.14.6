@@ -337,6 +337,11 @@ public static partial class Config
             /// 模糊方法。
             /// </summary>
             [ConfigItem<int>("UiBlurType", 0, ConfigSource.Local)] public partial int KernelType { get; set; }
+
+            /// <summary>
+            /// 窗口背景材质类型（Mica/Acrylic/无）。
+            /// </summary>
+            [ConfigItem<WindowBackdropType>("UiBackdropType", WindowBackdropType.None, ConfigSource.Local)] public partial WindowBackdropType BackdropType { get; set; }
         }
 
         /// <summary>

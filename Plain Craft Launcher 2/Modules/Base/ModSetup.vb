@@ -342,6 +342,11 @@ Public Class ModSetup
     Public Sub UiBlurType(Value As Integer)
         Application.Current.Resources("BlurType") = CType(Value, KernelType)
     End Sub
+    Public Sub UiBackdropType(Value As Integer)
+        ' 切换窗口材质时立即应用
+        FormMain.ApplySystemBackdrop()
+        ThemeRefreshMain()
+    End Sub
     '顶部栏
     Public Sub UiLogoType(Value As Integer)
         If ThemeService.CurrentTheme = ColorTheme.HmclBlue Then

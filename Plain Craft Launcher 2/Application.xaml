@@ -25,7 +25,7 @@
             <cvt:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
 
             <!--字体-->
-            <FontFamily x:Key="LaunchFontFamily">Resources/#PCL English, Microsoft YaHei UI</FontFamily>
+            <FontFamily x:Key="LaunchFontFamily">Segoe UI Variable, Segoe UI, Resources/#PCL English, Microsoft YaHei UI</FontFamily>
 
             <!-- 颜色表 -->
             <SolidColorBrush x:Key="ColorBrush1">#343d4a</SolidColorBrush>
@@ -159,11 +159,11 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate>
-                            <Border Loaded="TooltipLoaded" Unloaded="TooltipUnloaded" BorderBrush="{DynamicResource ColorBrush1}" BorderThickness="1.5" CornerRadius="4" MaxWidth="500" Background="{DynamicResource ColorBrushToolTip}" Margin="0,0,4,4" SnapsToDevicePixels="True">
+                            <Border Loaded="TooltipLoaded" Unloaded="TooltipUnloaded" BorderBrush="{DynamicResource ColorBrushGray5}" BorderThickness="1" CornerRadius="8" MaxWidth="500" Background="{DynamicResource ColorBrushToolTip}" Margin="0,0,6,6" SnapsToDevicePixels="True">
                                 <Border.Effect>
-                                    <DropShadowEffect Opacity="0.3" BlurRadius="4" ShadowDepth="2" Color="{DynamicResource ColorObject1}" />
+                                    <DropShadowEffect Opacity="0.18" BlurRadius="8" ShadowDepth="2" Color="{DynamicResource ColorObject1}" />
                                 </Border.Effect>
-                                <TextBlock Text="{TemplateBinding ContentControl.Content}" TextWrapping="Wrap" Foreground="{DynamicResource ColorBrush1}" Margin="7,5" FontSize="12"/>
+                                <TextBlock Text="{TemplateBinding ContentControl.Content}" TextWrapping="Wrap" Foreground="{DynamicResource ColorBrush1}" Margin="12,8" FontSize="12"/>
                             </Border>
                         </ControlTemplate>
                     </Setter.Value>
@@ -173,8 +173,8 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate>
-                            <Border Loaded="TooltipLoaded" Unloaded="TooltipUnloaded" BorderBrush="{DynamicResource ColorBrush1}" BorderThickness="1" CornerRadius="3" Background="{DynamicResource ColorBrushToolTip}" Margin="0,0,4,4" SnapsToDevicePixels="True">
-                                <TextBlock Text="{TemplateBinding ContentControl.Content}" TextWrapping="Wrap" Foreground="{DynamicResource ColorBrush1}" Margin="7,5" FontSize="12"/>
+                            <Border Loaded="TooltipLoaded" Unloaded="TooltipUnloaded" BorderBrush="{DynamicResource ColorBrushGray5}" BorderThickness="1" CornerRadius="8" Background="{DynamicResource ColorBrushToolTip}" Margin="0,0,6,6" SnapsToDevicePixels="True">
+                                <TextBlock Text="{TemplateBinding ContentControl.Content}" TextWrapping="Wrap" Foreground="{DynamicResource ColorBrush1}" Margin="12,8" FontSize="12"/>
                             </Border>
                         </ControlTemplate>
                     </Setter.Value>
@@ -343,7 +343,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="PasswordBox">
-                            <Border x:Name="border" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" Padding="0" SnapsToDevicePixels="True" CornerRadius="3">
+                            <Border x:Name="border" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" Padding="0" SnapsToDevicePixels="True" CornerRadius="4">
                                 <local:MyScrollViewer x:Name="PART_ContentHost" Margin="4.5,4.5,0,4.5" HorizontalScrollBarVisibility="Hidden" RenderOptions.ClearTypeHint="Enabled" SnapsToDevicePixels="True"/>
                             </Border>
                             <ControlTemplate.Triggers>
@@ -393,7 +393,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="ComboBox">
                             <Grid>
-                                <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="3" BorderThickness="1" BorderBrush="{TemplateBinding Foreground}" />
+                                <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="4" BorderThickness="1" BorderBrush="{TemplateBinding Foreground}" />
                                 <ToggleButton Margin="0,0,1.5,0" Foreground="{TemplateBinding Foreground}" IsTabStop="False" SnapsToDevicePixels="False" Focusable="False" IsChecked="{Binding IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press" />
                                 <ContentPresenter x:Name="PART_Content" Margin="8.5,0,21.5,0" IsHitTestVisible="False" VerticalAlignment="Center"
                                                   Content="{TemplateBinding SelectionBoxItem}" 
@@ -401,8 +401,8 @@
                                                   ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" />
                                 <Popup x:Name="PART_Popup" SnapsToDevicePixels="True" VerticalOffset="-1.5" AllowsTransparency="True" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" PopupAnimation="Fade">
                                     <Grid x:Name="PanPopup">
-                                        <Border Background="{DynamicResource ColorBrushWhite}" CornerRadius="3" />
-                                        <Border x:Name="dropDownBorder" CornerRadius="3" BorderBrush="{TemplateBinding Foreground}" BorderThickness="1" Width="{TemplateBinding Width}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                        <Border Background="{DynamicResource ColorBrushWhite}" CornerRadius="6" />
+                                        <Border x:Name="dropDownBorder" CornerRadius="6" BorderBrush="{TemplateBinding Foreground}" BorderThickness="1" Width="{TemplateBinding Width}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                             <local:MyScrollViewer x:Name="DropDownScrollViewer" PanningMode="VerticalOnly" SnapsToDevicePixels="False" Style="{DynamicResource ScrollViewerFullMargin}" ScrollViewer.CanContentScroll="False" VerticalScrollBarVisibility="Auto">
                                                 <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" />
                                             </local:MyScrollViewer>
@@ -426,13 +426,13 @@
                             <Setter.Value>
                                 <ControlTemplate TargetType="ComboBox">
                                     <Grid>
-                                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="3" BorderThickness="1" BorderBrush="{TemplateBinding Foreground}" />
+                                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="4" BorderThickness="1" BorderBrush="{TemplateBinding Foreground}" />
                                         <ToggleButton Margin="0,0,1.5,0" Foreground="{TemplateBinding Foreground}" IsTabStop="False" SnapsToDevicePixels="False" Focusable="False" IsChecked="{Binding IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press" />
                                         <local:MyTextBox x:Name="PART_EditableTextBox" BorderThickness="0" Margin="1.5,0,21.5,0" Padding="0" Background="{x:Null}" />
                                         <Popup x:Name="PART_Popup" SnapsToDevicePixels="True" VerticalOffset="-1.5" AllowsTransparency="True" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" PopupAnimation="Fade">
                                             <Grid x:Name="PanPopup">
-                                                <Border Background="{DynamicResource ColorBrushWhite}" CornerRadius="3" />
-                                                <Border x:Name="dropDownBorder" SnapsToDevicePixels="False" CornerRadius="3" BorderBrush="{TemplateBinding Foreground}" BorderThickness="1" Width="{TemplateBinding Width}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                                <Border Background="{DynamicResource ColorBrushWhite}" CornerRadius="6" />
+                                                <Border x:Name="dropDownBorder" SnapsToDevicePixels="False" CornerRadius="6" BorderBrush="{TemplateBinding Foreground}" BorderThickness="1" Width="{TemplateBinding Width}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                                     <local:MyScrollViewer x:Name="DropDownScrollViewer" Style="{DynamicResource ScrollViewerFullMargin}" ScrollViewer.CanContentScroll="False" VerticalScrollBarVisibility="Auto">
                                                         <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" />
                                                     </local:MyScrollViewer>
@@ -535,11 +535,11 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ContextMenu">
-                            <Border BorderBrush="{DynamicResource ColorBrush1}" BorderThickness="1" CornerRadius="3" Background="{DynamicResource ColorBrushWhite}" Margin="0,0,4,4" SnapsToDevicePixels="True">
+                            <Border BorderBrush="{DynamicResource ColorBrushGray5}" BorderThickness="1" CornerRadius="8" Background="{DynamicResource ColorBrushWhite}" Margin="0,0,6,6" SnapsToDevicePixels="True" Padding="4">
                                 <Border.Effect>
-                                    <DropShadowEffect Opacity="0.4" BlurRadius="4" ShadowDepth="2" />
+                                    <DropShadowEffect Opacity="0.16" BlurRadius="16" ShadowDepth="4" />
                                 </Border.Effect>
-                                <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" Margin="0.5"/>
+                                <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
                             </Border>
                         </ControlTemplate>
                     </Setter.Value>
@@ -551,17 +551,14 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="MenuItem">
-                            <Border Name="PanBack" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True" Height="26">
+                            <Border Name="PanBack" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True" Height="32" CornerRadius="4">
                                 <Grid SnapsToDevicePixels="False" UseLayoutRounding="False">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" SharedSizeGroup="Icon"/>
                                         <ColumnDefinition />
-                                        <!--  <ColumnDefinition Width="Auto" SharedSizeGroup="Shortcut"/>
-                                    <ColumnDefinition Width="13"/>  -->
                                     </Grid.ColumnDefinitions>
-                                    <Path Name="Icon" VerticalAlignment="Center" Stretch="Uniform" Margin="8,0" Fill="{TemplateBinding Foreground}" Height="12" Width="15" />
+                                    <Path Name="Icon" VerticalAlignment="Center" Stretch="Uniform" Margin="10,0" Fill="{TemplateBinding Foreground}" Height="12" Width="15" />
                                     <TextBlock Name="HeaderHost" Grid.Column="1" Text="{TemplateBinding Header}" Foreground="{TemplateBinding Foreground}" Margin="0,0,40,0" VerticalAlignment="Center" Height="16" />
-                                    <!--  <TextBlock x:Name="InputGestureText" Grid.Column="2" Text="{TemplateBinding InputGestureText}" Margin="5,2,0,2" DockPanel.Dock="Right" /> -->
                                 </Grid>
                             </Border>
                             <ControlTemplate.Triggers>

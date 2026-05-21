@@ -81,10 +81,10 @@ Public Class MyCard
     Public Sub New()
         MyBase.New(BlurBorder.BackgroundProperty)
         MainChrome = New MyDropShadow With {
-            .Margin = New Thickness(-3, -3, -3, -3 - GetWPFSize(1)), .ShadowRadius = 3, .Opacity = DropShadowIdleOpacity, .CornerRadius = New CornerRadius(5)}
+            .Margin = New Thickness(-3, -3, -3, -3 - GetWPFSize(1)), .ShadowRadius = 3, .Opacity = DropShadowIdleOpacity, .CornerRadius = New CornerRadius(8)}
         MainChrome.SetResourceReference(MyDropShadow.ColorProperty, "ColorObject1")
         Children.Insert(0, MainChrome)
-        MainBorder = New BlurBorder With {.CornerRadius = New CornerRadius(5), .IsHitTestVisible = False}
+        MainBorder = New BlurBorder With {.CornerRadius = New CornerRadius(8), .IsHitTestVisible = False}
         Children.Insert(1, MainBorder)
         MainGrid = New Grid
         Children.Add(MainGrid)

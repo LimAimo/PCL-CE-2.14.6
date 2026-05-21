@@ -1,6 +1,7 @@
 Imports PCL.Core.App
 Imports PCL.Core.UI
 Imports PCL.Core.Utils
+Imports PCL.Core.Utils.OS
 
 Public Class PageSetupUI
 
@@ -95,6 +96,8 @@ Public Class PageSetupUI
             SliderBlurSamplingRate.Value = Setup.Get("UiBlurSamplingRate")
             ComboBlurType.SelectedIndex = Setup.Get("UiBlurType")
             PanBlurValue.Visibility = If(CheckBlur.Checked, Visibility.Visible, Visibility.Collapsed)
+            ComboBackdropType.SelectedIndex = Setup.Get("UiBackdropType")
+            HintBackdropUnsupported.Visibility = If(WindowInterop.IsMicaSupported(), Visibility.Collapsed, Visibility.Visible)
             CheckLockWindowSize.Checked = Setup.Get("UiLockWindowSize")
 
             '背景图片
@@ -203,8 +206,15 @@ Public Class PageSetupUI
     Private Shared Sub SliderChange(sender As MySlider, e As Object) Handles SliderBackgroundOpacity.Change, SliderBlurValue.Change, SliderBlurSamplingRate.Change, SliderBackgroundBlur.Change, SliderLauncherOpacity.Change, SliderMusicVolume.Change ', SliderLauncherHue.Change, SliderLauncherLight.Change, SliderLauncherSat.Change, SliderLauncherDelta.Change
         If AniControlEnabled = 0 Then Setup.Set(sender.Tag, sender.Value)
     End Sub
-    Private Shared Sub ComboChange(sender As MyComboBox, e As Object) Handles ComboDarkMode.SelectionChanged, ComboBackgroundSuit.SelectionChanged, ComboCustomPreset.SelectionChanged, ComboBlurType.SelectionChanged
-        If AniControlEnabled = 0 Then Setup.Set(sender.Tag, sender.SelectedIndex)
+    Private Shared Sub ComboChange(sender As MyComboBox, e As Object) Handles ComboDarkMode.SelectionChanged, ComboBackgroundSuit.SelectionChanged, ComboCustomPreset.SelectionChanged, ComboBlurType.SelectionChanged, ComboBackdropType.SelectionChanged
+        If AniControlEnabled = 0 Then
+            Setup.Set(sender.Tag, sender.SelectedIndex)
+            ' 切换窗口材质时立即应用
+            If sender.Tag?.ToString() = "UiBackdropType" Then
+                FormMain.ApplySystemBackdrop()
+                ThemeRefreshMain()
+            End If
+        End If
     End Sub
     Private Shared Sub CheckBoxChange(sender As MyCheckBox, e As Object) Handles _
     CheckLockWindowSize.Change, CheckBlur.Change, CheckAutoPauseVideo.Change,

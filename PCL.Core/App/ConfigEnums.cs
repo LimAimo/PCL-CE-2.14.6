@@ -112,3 +112,18 @@ public enum LauncherTitleType
     Text = 2,
     Image = 3
 }
+
+/// <summary>
+/// 窗口背景材质类型
+/// </summary>
+public enum WindowBackdropType
+{
+    /// <summary>无系统背景效果（使用自定义背景）</summary>
+    None = 0,
+    /// <summary>Mica 云母效果</summary>
+    Mica = 1,
+    /// <summary>Mica Alt 云母变体（颜色更深）</summary>
+    MicaAlt = 2,
+    /// <summary>Acrylic 亚克力效果</summary>
+    Acrylic = 3
+}
