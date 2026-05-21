@@ -15,14 +15,14 @@ Public Class PageLaunchRight
 
     '暂时关闭快照版提示
     Private Sub BtnHintClose_Click(sender As Object, e As EventArgs) Handles BtnHintClose.Click
-        Dim input = MyMsgBoxInput("输入 PCL CE 开发组织名称")
+        Dim input = MyMsgBoxInput("输入我已知晓以关闭此提示")
         If input.IsNullOrWhiteSpace() Then Return
         input = New String(input.Where(Function(x) Char.IsAsciiLetter(x)).ToArray()).ToLower()
-        If input.Contains("pclcommunity") Then
+        If input.Contains("我已知晓") Then
             AniDispose(PanHint, True)
             States.Hint.CEMessage = False
         Else
-            Hint("不太对哦……")
+            Hint("是我已知晓！！！")
         End If
     End Sub
 
