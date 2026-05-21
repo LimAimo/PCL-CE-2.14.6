@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 
@@ -53,7 +53,23 @@ public static partial class WindowInterop
     {
         DWMWA_USE_IMMERSIVE_DARK_MODE = 20,
         DWMWA_SYSTEMBACKDROP_TYPE = 38,
-        DWMWA_MICA_EFFECT = 1029
+        DWMWA_MICA_EFFECT = 1029,
+        DWMWA_WINDOW_CORNER_PREFERENCE = 33
+    }
+
+    /// <summary>
+    /// 窗口圆角偏好 (Windows 11+)
+    /// </summary>
+    public enum DwmWindowCornerPreference
+    {
+        /// <summary>默认（让系统决定）</summary>
+        Default = 0,
+        /// <summary>不使用圆角</summary>
+        DoNotRound = 1,
+        /// <summary>强制圆角</summary>
+        Round = 2,
+        /// <summary>小圆角</summary>
+        RoundSmall = 3
     }
 
     /// <summary>
@@ -175,6 +191,20 @@ public static partial class WindowInterop
         if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 18985)) return false;
         var value = useDarkMode ? 1 : 0;
         var hr = DwmSetWindowAttribute(hWnd, (int)DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE, ref value, sizeof(int));
+        return hr == 0;
+    }
+
+    /// <summary>
+    /// 设置窗口圆角偏好，需要 Windows 11+。
+    /// </summary>
+    /// <param name="hWnd">窗口句柄</param>
+    /// <param name="preference">圆角偏好</param>
+    /// <returns>是否设置成功</returns>
+    public static bool SetWindowCornerPreference(IntPtr hWnd, DwmWindowCornerPreference preference)
+    {
+        if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000)) return false;
+        var value = (int)preference;
+        var hr = DwmSetWindowAttribute(hWnd, (int)DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE, ref value, sizeof(int));
         return hr == 0;
     }
 

@@ -494,6 +494,8 @@ Public Class FormMain
                 dwmBackdrop = WindowInterop.DwmSystemBackdropType.None
         End Select
         WindowInterop.SetSystemBackdropType(hwnd, dwmBackdrop)
+        ' 启用 Windows 11 原生圆角
+        WindowInterop.SetWindowCornerPreference(hwnd, WindowInterop.DwmWindowCornerPreference.Round)
     End Sub
 
     '关闭

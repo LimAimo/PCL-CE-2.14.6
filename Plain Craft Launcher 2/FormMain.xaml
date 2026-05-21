@@ -15,7 +15,7 @@
     </Window.TaskbarItemInfo>
     <WindowChrome.WindowChrome>
         <WindowChrome
-            CaptionHeight="48"
+            CaptionHeight="0"
             UseAeroCaptionButtons="True"
             ResizeBorderThickness="8"
             CornerRadius="0"
