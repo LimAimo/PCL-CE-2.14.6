@@ -215,10 +215,6 @@ Public Class CustomEvent
                         Hint("当前页面不支持刷新操作！", HintType.Critical)
                     End If
 
-                Case EventType.刷新主页市场
-                    FrmHomePageMarket.Refresh()
-                    If args(0) = "" Then Hint("已刷新主页市场！", HintType.Finish)
-
                 Case EventType.刷新帮助
                     PageToolsLeft.RefreshHelp()
                 Case EventType.刷新帮助

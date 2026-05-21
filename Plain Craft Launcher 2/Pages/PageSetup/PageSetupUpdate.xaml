@@ -1,4 +1,4 @@
-﻿
+
 <local:MyPageRight
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -37,9 +37,6 @@
                             <local:MyComboBoxItem Content="提示更新" ToolTip="启动器将会自动检查可用更新，然后提示你下载并安装更新。" />
                             <local:MyComboBoxItem Content="不自动检查更新（不推荐）" ToolTip="关闭自动更新检查。这可能导致你无法及时获得更新。" />
                         </local:MyComboBox>
-                        <TextBlock Text="Mirror 酱 CDK" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,25,0" />
-                        <PasswordBox x:Name="TextMirrorCDK" ToolTip="Mirror 酱 (mirrorchyan.com) 是一个付费的第三方应用分发平台，用于提供国内有偿高速下载源。&#xa;这是一项可选服务，不填入 CDK 不影响正常使用与更新。&#xa;如果你有 Mirror 酱的 CDK，可以提供给 PCL CE，启动器会优先使用他们的高速下载源下载软件更新，也能缓解社区公益更新服务器的一些压力……" Grid.Row="4" Grid.Column="1" />
-                        <local:MyButton x:Name="BtnGetMirrorCDK" Text="获取 CDK" Grid.Column="3" Grid.Row="4" ColorType="Highlight" />
                     </Grid>
                 </StackPanel>
             </local:MyCard>

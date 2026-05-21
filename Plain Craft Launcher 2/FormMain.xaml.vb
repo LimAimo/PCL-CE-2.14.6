@@ -843,6 +843,7 @@ Public Class FormMain
         Sub()
             Dim FilePath As String = FilePathList.First
             Log("[System] 接受文件拖拽：" & FilePath & If(FilePathList.Any, $" 等 {FilePathList.Count} 个文件", ""), LogLevel.Developer)
+            Dim FileExtension = FilePath.AfterLast(".").ToLower
             '基础检查
             If Directory.Exists(FilePathList.First) AndAlso Not File.Exists(FilePathList.First) Then
                 Hint("请拖入一个文件，而非文件夹！", HintType.Critical)
@@ -864,24 +865,11 @@ Public Class FormMain
                     Return
                 End If
             End If
-            '主页
-            Dim Extension As String = FilePath.AfterLast(".").ToLower
-            If Extension = "xaml" Then
-                Log("[System] 文件后缀为 XAML，作为主页加载")
-                If File.Exists(ExePath & "PCL\Custom.xaml") Then
-                    If MyMsgBox("已存在一个主页文件，是否要将它覆盖？", "覆盖确认", "覆盖", "取消") = 2 Then
-                        Return
-                    End If
-                End If
-                CopyFile(FilePath, ExePath & "PCL\Custom.xaml")
-                Hint("已加载主页自定义文件！（主页功能已禁用）", HintType.Finish)
-                Return
-            End If
             '安装 Mod
             If PageInstanceCompResource.InstallMods(FilePathList) Then Exit Sub
             '安装投影文件
-            If {"litematic", "nbt", "schematic", "schem"}.Contains(Extension) Then
-                Log($"[System] 文件为 {Extension} 格式，尝试作为原理图安装")
+            If {"litematic", "nbt", "schematic", "schem"}.Contains(FileExtension) Then
+                Log($"[System] 文件为 {FileExtension} 格式，尝试作为原理图安装")
                 ' 获取当前文件夹路径（如果在资源管理页面）
                 Dim targetFolderPath As String = Nothing
                 If PageCurrent = PageType.InstanceSetup AndAlso PageCurrentSub = PageSubType.VersionSchematic AndAlso
@@ -892,7 +880,7 @@ Public Class FormMain
                 Exit Sub
             End If
             '处理资源安装
-            If PageCurrent = PageType.InstanceSetup AndAlso {"zip"}.Any(Function(i) i = Extension) Then
+            If PageCurrent = PageType.InstanceSetup AndAlso {"zip"}.Any(Function(i) i = FileExtension) Then
                 Select Case PageCurrentSub
                     Case PageSubType.VersionWorld
                         Dim DestFolder = PageInstanceLeft.Instance.PathIndie + "saves\" + GetFileNameWithoutExtentionFromPath(FilePath)
@@ -927,7 +915,7 @@ Public Class FormMain
                 End Select
             End If
             '处理投影文件
-            If PageCurrent = PageType.InstanceSetup AndAlso {"litematic", "nbt", "schematic", "schem"}.Contains(Extension) AndAlso PageCurrentSub = PageSubType.VersionSchematic Then
+            If PageCurrent = PageType.InstanceSetup AndAlso {"litematic", "nbt", "schematic", "schem"}.Contains(FileExtension) AndAlso PageCurrentSub = PageSubType.VersionSchematic Then
                 Dim DestFile = PageInstanceLeft.Instance.PathIndie + "schematics\" + GetFileNameFromPath(FilePath)
                 If File.Exists(DestFile) Then
                     Hint("已存在同名文件：" + DestFile, HintType.Critical)
@@ -940,7 +928,7 @@ Public Class FormMain
                 Exit Sub
             End If
             '安装整合包
-            If {"zip", "rar", "mrpack"}.Any(Function(t) t = Extension) Then '部分压缩包是 zip 格式但后缀为 rar，总之试一试
+            If {"zip", "rar", "mrpack"}.Any(Function(t) t = FileExtension) Then '部分压缩包是 zip 格式但后缀为 rar，总之试一试
                 Log("[System] 文件为压缩包，尝试作为整合包安装")
                 Try
                     ModpackInstall(FilePath)
@@ -951,7 +939,7 @@ Public Class FormMain
                     '安装失败，继续往后尝试
                 End Try
             End If
-            If {"zip", "rar"}.Any(Function(t) t = Extension) Then
+            If {"zip", "rar"}.Any(Function(t) t = FileExtension) Then
                 Log("[System] 文件为压缩包，尝试作为存档分析")
                 Try
                     ReadWorld(FilePath)
@@ -1120,10 +1108,6 @@ Public Class FormMain
         ''' 存档详细管理，这是一个副页面。
         ''' </summary>
         VersionSaves = 12
-        ''' <summary>
-        ''' 主页市场，这是一个副页面。
-        ''' </summary>
-        HomePageMarket = 13
     End Enum
     ''' <summary>
     ''' 次要页面种类。其数值必须与 StackPanel 中的下标一致。
@@ -1200,8 +1184,6 @@ Public Class FormMain
                 Return CType(Stack.Additional(0), HelpEntry).Title
             Case PageType.VersionSaves
                 Return $"存档管理 - {GetFolderNameFromPath(Stack.Additional)}"
-            Case PageType.HomePageMarket
-                Return "主页市场"
             Case Else
                 Return ""
         End Select
@@ -1443,9 +1425,6 @@ Public Class FormMain
                     If FrmInstanceSavesLeft Is Nothing Then FrmInstanceSavesLeft = New PageInstanceSavesLeft
                     PageInstanceSavesLeft.CurrentSave = Stack.Additional
                     PageChangeAnim(FrmInstanceSavesLeft, FrmInstanceSavesLeft.PageGet(SubType))
-                Case PageType.HomePageMarket '主页市场
-                    FrmHomepageMarket = If(FrmHomepageMarket, New PageHomePageMarket)
-                    PageChangeAnim(New MyPageLeft, FrmHomepageMarket)
             End Select
 #End Region
 

@@ -312,7 +312,6 @@ PCL-Community 及其成员与龙腾猫跃无从属关系，且均不会为您的
     Public IsCheckingUpdates As Boolean = False
     Public IsUpdateWaitingRestart As Boolean = False
     Public RemoteServer As New UpdatesWrapperModel({
-        New UpdatesMirrorChyanModel(),
         New UpdatesRandomModel({
                 New UpdatesMinioModel("https://s3.pysio.online/pcl2-ce/", "Pysio"),
                 New UpdatesMinioModel("https://staticassets.naids.com/resources/pclce/", "Naids")
@@ -477,49 +476,7 @@ PCL-Community 及其成员与龙腾猫跃无从属关系，且均不会为您的
     Public ServerLoader As New LoaderTask(Of Integer, Integer)("PCL CE 服务", AddressOf LoadOnlineInfo, Priority:=ThreadPriority.BelowNormal)
 
     Private Sub LoadOnlineInfo()
-        Dim updateDesire = Setup.Get("SystemSystemUpdate")
-        Dim AnnouncementDesire = Setup.Get("SystemSystemActivity")
-        Select Case updateDesire
-            Case 0 '静默更新
-                Log("[Update] 更新设置: 自动下载并安装更新")
-                If GetVersionStatus() <> VersionStatus.Latest Then
-                    UpdateStart(UpdateType.Silent)
-                End If
-            Case 1 '自动下载，提示更新
-                Log("[Update] 更新设置: 自动下载并提示更新")
-                UpdateStart(UpdateType.DownloadAndPrompt)
-            Case 2 '提示更新
-                Log("[Update] 更新设置: 提示更新")
-                UpdateStart(UpdateType.PromptOnly)
-            Case Else
-                Log("[Update] 更新设置: 不自动检查更新")
-                Exit Sub
-        End Select
-        If AnnouncementDesire <= 1 Then
-            Dim ShowedAnnounced = Setup.Get("SystemSystemAnnouncement").ToString().Split("|".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).ToList()
-            Dim ShowAnnounce = RemoteServer.GetAnnouncementList().content.Where(Function(x) Not ShowedAnnounced.Contains(x.id)).ToList()
-            Log("[System] 需要展示的公告数量：" + ShowAnnounce.Count.ToString())
-            RunInNewThread(Sub()
-                               For Each item In ShowAnnounce
-                                   Dim SelectedBtn = MyMsgBox(
-                                   item.detail,
-                                   item.title,
-                                   If(item.btn1 Is Nothing, "", item.btn1.text),
-                                   If(item.btn2 Is Nothing, "", item.btn2.text),
-                                   "关闭",
-                                   Button1Action:=Sub()
-                                       CustomEvent.Raise(item.btn1.command, item.btn1.command_paramter)
-                                                  End Sub,
-                                   Button2Action:=Sub()
-                                       CustomEvent.Raise(item.btn2.command, item.btn2.command_paramter)
-                                                  End Sub
-                                    )
-                               Next
-                           End Sub)
-            ShowedAnnounced.AddRange(ShowAnnounce.Select(Function(x) x.id).ToList())
-            ShowedAnnounced = ShowedAnnounced.Distinct().ToList()
-            Setup.Set("SystemSystemAnnouncement", ShowedAnnounced.Join("|"))
-        End If
+        Log("[Update] 自动更新检查和远程公告功能已禁用")
     End Sub
 
 #End Region

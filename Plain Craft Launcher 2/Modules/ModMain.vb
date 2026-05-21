@@ -520,7 +520,6 @@ EndHint:
     Public FrmSetupGameManage As PageSetupGameManage
     Public FrmSetupUpdate As PageSetupUpdate
     Public FrmSetupJava As PageSetupJava
-    Public FrmHomePageMarket As PageHomepageMarket
     Public FrmSetupAbout As PageSetupAbout
     Public FrmSetupLog As PageSetupLog
     Public FrmSetupFeedback As PageSetupFeedback
