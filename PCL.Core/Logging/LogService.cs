@@ -46,10 +46,6 @@ public class LogService : ILifecycleLogService
 
     private static void _LogAction(LogLevel level, ActionLevel actionLevel, string formatted, string plain, Exception? ex)
     {
-        if (ex is not null) {
-            TelemetryService.ReportException(ex, plain, level);
-        }
-        
         // log
 #if !TRACE
         if (actionLevel != ActionLevel.TraceLog)

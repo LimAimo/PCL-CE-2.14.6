@@ -1,4 +1,4 @@
-﻿Imports PCL.Core.App
+Imports PCL.Core.App
 Imports PCL.Core.App.Configuration
 Imports PCL.Core.UI
 Imports PCL.Core.Utils.Exts
@@ -28,7 +28,6 @@ Class PageSetupLauncherMisc
         CheckSystemDisableHardwareAcceleration.Checked = Config.System.DisableHardwareAcceleration
         SliderAniFPS.Value = Config.System.AnimationFpsLimit
         SliderMaxLog.Value = Config.System.MaxGameLog
-        CheckSystemTelemetry.Checked = Config.System.Telemetry
 
         '网络
         TextSystemHttpProxy.Text = Config.Network.HttpProxy.CustomAddress
@@ -66,7 +65,7 @@ Class PageSetupLauncherMisc
         Dim gotCfg = sender.Tag.ToString.Split("/")
         If AniControlEnabled = 0 Then Setup.Set(gotCfg(0), Integer.Parse(gotCfg(1)))
     End Sub
-    Private Shared Sub CheckBoxChange(sender As MyCheckBox, e As Object) Handles CheckDebugMode.Change, CheckDebugDelay.Change, CheckDebugSkipCopy.Change, CheckSystemDisableHardwareAcceleration.Change, CheckSystemTelemetry.Change, CheckNetDohEnable.Change
+    Private Shared Sub CheckBoxChange(sender As MyCheckBox, e As Object) Handles CheckDebugMode.Change, CheckDebugDelay.Change, CheckDebugSkipCopy.Change, CheckSystemDisableHardwareAcceleration.Change, CheckNetDohEnable.Change
         If AniControlEnabled = 0 Then Setup.Set(sender.Tag, sender.Checked)
     End Sub
     Private Shared Sub SliderChange(sender As MySlider, e As Object) Handles SliderDebugAnim.Change, SliderAniFPS.Change, SliderMaxLog.Change

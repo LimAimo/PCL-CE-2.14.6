@@ -22,8 +22,6 @@ Friend Module ModSecret
     Public ReadOnly OAuthClientId As String = EnvironmentInterop.GetSecret("MS_CLIENT_ID", readEnvDebugOnly:=True).ReplaceNullOrEmpty()
     'CurseForge API Key
     Public ReadOnly CurseForgeAPIKey As String = EnvironmentInterop.GetSecret("CURSEFORGE_API_KEY", readEnvDebugOnly:=True).ReplaceNullOrEmpty()
-    '遥测鉴权密钥
-    Public ReadOnly TelemetryKey As String = EnvironmentInterop.GetSecret("TELEMETRY_KEY", readEnvDebugOnly:=True).ReplaceNullOrEmpty()
     'Natayark ID Client Id
     Public ReadOnly NatayarkClientId As String = EnvironmentInterop.GetSecret("NAID_CLIENT_ID", readEnvDebugOnly:=True).ReplaceNullOrEmpty()
     'Natayark ID Client Secret，需要经过 PASSWORD HASH 处理（https://uutool.cn/php-password/）
