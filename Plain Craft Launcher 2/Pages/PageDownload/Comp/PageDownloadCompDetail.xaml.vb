@@ -25,6 +25,27 @@ Public Class PageDownloadCompDetail
         _targetInstance = FrmMain.PageCurrent.Additional(2)
         _targetLoader = FrmMain.PageCurrent.Additional(3)
         _pageType = FrmMain.PageCurrent.Additional(4)
+        '当未指定目标版本时（如从收藏夹进入），自动从当前选择的实例获取版本和加载器信息
+        If String.IsNullOrEmpty(_targetInstance) AndAlso McInstanceSelected IsNot Nothing Then
+            Try
+                If Not McInstanceSelected.IsLoaded Then McInstanceSelected.Load()
+                _targetInstance = McInstanceSelected.Info.VanillaName
+                If _targetLoader = CompLoaderType.Any Then
+                    If McInstanceSelected.Info.HasNeoForge Then
+                        _targetLoader = CompLoaderType.NeoForge
+                    ElseIf McInstanceSelected.Info.HasForge Then
+                        _targetLoader = CompLoaderType.Forge
+                    ElseIf McInstanceSelected.Info.HasFabric Then
+                        _targetLoader = CompLoaderType.Fabric
+                    ElseIf McInstanceSelected.Info.HasQuilt Then
+                        _targetLoader = CompLoaderType.Quilt
+                    End If
+                End If
+                Log($"[Comp] 从当前实例自动获取目标版本：{_targetInstance}，加载器：{_targetLoader}")
+            Catch ex As Exception
+                Log(ex, "[Comp] 从当前实例获取版本信息失败")
+            End Try
+        End If
     End Sub
     Private _project As CompProject
     Private _targetInstance As String, _targetLoader As CompLoaderType
@@ -325,20 +346,23 @@ GroupDone:
                                             Dim distinctCount = list.Select(Function(f) f.DisplayName).Distinct().Count()
                                             Dim badDisplayName = distinctCount <> list.Count
 
+                                            ' 查找最佳匹配版本
+                                            Dim recommendedFile As CompFile = FindBestMatchFile(list)
+
                                             ' 批量添加子项
                                             Select Case _project.Type
                                                 Case CompType.ModPack
                                                     For Each item In list
-                                                        stack.Children.Add(item.ToListItem(AddressOf FrmDownloadCompDetail.Install_Click, AddressOf FrmDownloadCompDetail.Save_Click, BadDisplayName:=badDisplayName))
+                                                        stack.Children.Add(item.ToListItem(AddressOf FrmDownloadCompDetail.Install_Click, AddressOf FrmDownloadCompDetail.Save_Click, BadDisplayName:=badDisplayName, IsRecommended:=(item Is recommendedFile)))
                                                     Next
                                                 Case CompType.World
                                                     For Each item In list
-                                                        stack.Children.Add(item.ToListItem(AddressOf FrmDownloadCompDetail.InstallWorld_Click, AddressOf FrmDownloadCompDetail.Save_Click, BadDisplayName:=badDisplayName))
+                                                        stack.Children.Add(item.ToListItem(AddressOf FrmDownloadCompDetail.InstallWorld_Click, AddressOf FrmDownloadCompDetail.Save_Click, BadDisplayName:=badDisplayName, IsRecommended:=(item Is recommendedFile)))
                                                     Next
                                                 Case Else
                                                     CompFilesCardPreload(stack, list)
                                                     For Each item In list
-                                                        stack.Children.Add(item.ToListItem(AddressOf FrmDownloadCompDetail.Save_Click, BadDisplayName:=badDisplayName))
+                                                        stack.Children.Add(item.ToListItem(AddressOf FrmDownloadCompDetail.Save_Click, BadDisplayName:=badDisplayName, IsRecommended:=(item Is recommendedFile)))
                                                     Next
                                             End Select
                                         End Sub
@@ -400,6 +424,60 @@ GroupDone:
         Else
             Return name
         End If
+    End Function
+
+    ''' <summary>
+    ''' 在文件列表中查找最匹配当前所选实例的版本。
+    ''' 匹配规则：精确匹配游戏版本 > 匹配加载器 > 正式版优先 > 最新发布日期。
+    ''' 如果没有目标版本信息则返回 Nothing。
+    ''' </summary>
+    Private Function FindBestMatchFile(files As List(Of CompFile)) As CompFile
+        If String.IsNullOrEmpty(_targetInstance) Then Return Nothing
+        If files Is Nothing OrElse files.Count = 0 Then Return Nothing
+
+        Dim bestFile As CompFile = Nothing
+        Dim bestScore As Integer = -1
+
+        For Each file In files
+            Dim score As Integer = 0
+
+            ' 精确匹配游戏版本（+100 分）
+            If file.GameVersions.Contains(_targetInstance) Then
+                score += 100
+            Else
+                ' 不匹配游戏版本的文件不参与推荐
+                Continue For
+            End If
+
+            ' 匹配加载器（+50 分）
+            If _targetLoader <> CompLoaderType.Any Then
+                If file.ModLoaders.Contains(_targetLoader) Then
+                    score += 50
+                End If
+            Else
+                ' 没有指定加载器时，所有文件在加载器维度上等价
+                score += 50
+            End If
+
+            ' 正式版优先（+20 分）
+            If file.Status = CompFileStatus.Release Then
+                score += 20
+            ElseIf file.Status = CompFileStatus.Beta Then
+                score += 10
+            End If
+
+            ' 同分时取最新发布的
+            If score > bestScore OrElse (score = bestScore AndAlso bestFile IsNot Nothing AndAlso file.ReleaseDate > bestFile.ReleaseDate) Then
+                bestScore = score
+                bestFile = file
+            End If
+        Next
+
+        ' 只有当至少匹配了游戏版本时才推荐
+        If bestScore >= 100 Then
+            Return bestFile
+        End If
+        Return Nothing
     End Function
 
 #End Region

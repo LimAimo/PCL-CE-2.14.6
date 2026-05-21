@@ -258,22 +258,6 @@ NextInner:
         RunInUiWait(Sub() CheckResult = IsProfileValid())
         If SelectedProfile Is Nothing Then '没选档案
             CheckResult = "请先选择一个档案再启动游戏！"
-        ElseIf McInstanceSelected.Info.HasLabyMod OrElse Setup.Get("VersionServerLoginRequire", McInstanceSelected) = 1 Then '要求正版验证
-            If Not SelectedProfile.Type = McLoginType.Ms Then
-                CheckResult = "当前实例要求使用正版验证，请使用正版验证档案启动游戏！"
-            End If
-        ElseIf Setup.Get("VersionServerLoginRequire", McInstanceSelected) = 2 Then '要求第三方验证
-            If Not SelectedProfile.Type = McLoginType.Auth Then
-                CheckResult = "当前实例要求使用第三方验证，请使用第三方验证档案启动游戏！"
-            ElseIf Not SelectedProfile.Server.BeforeLast("/authserver") = Setup.Get("VersionServerAuthServer", McInstanceSelected) Then
-                CheckResult = "当前档案使用的第三方验证服务器与实例要求使用的不一致，请使用符合要求的档案启动游戏！"
-            End If
-        ElseIf Setup.Get("VersionServerLoginRequire", McInstanceSelected) = 3 Then '要求正版验证或第三方验证
-            If SelectedProfile.Type = McLoginType.Legacy Then
-                CheckResult = "当前实例要求使用正版验证或第三方验证，请使用符合要求的档案启动游戏！"
-            ElseIf SelectedProfile.Type = McLoginType.Auth AndAlso Not SelectedProfile.Server.BeforeLast("/authserver") = Setup.Get("VersionServerAuthServer", McInstanceSelected) Then
-                CheckResult = "当前档案使用的第三方验证服务器与实例要求使用的不一致，请使用符合要求的档案启动游戏！"
-            End If
         End If
         If CheckResult <> "" Then Throw New ArgumentException(CheckResult)
 #If BETA Then
@@ -293,24 +277,6 @@ NextInner:
             End Sub, "Donate")
         End If
 #End If
-        '正版购买提示
-        If Not ProfileList.Any(Function(x) x.Type = McLoginType.Ms) Then
-            If RegionUtils.IsRestrictedFeatAllowed Then
-                If MyMsgBox($"看起来你似乎没买正版...{vbCrLf}如果觉得 Minecraft 还不错，可以购买正版支持一下，毕竟开发游戏也真的很不容易...不要一直白嫖啦。{vbCrLf}{vbCrLf}在验证一个正版账号之后，就不会出现这个提示了！", 
-                            "考虑一下正版？", "支持正版游戏！", "下次一定") = 1 Then
-                    OpenWebsite("https://www.xbox.com/zh-cn/games/store/minecraft-java-bedrock-edition-for-pc/9nxp44l49shj")
-                End If
-            Else
-                Select Case MyMsgBox("你必须先登录正版账号才能启动游戏！", "正版验证", "购买正版", "试玩", "返回",
-                                     Button1Action:=Sub() OpenWebsite("https://www.xbox.com/zh-cn/games/store/minecraft-java-bedrock-edition-for-pc/9nxp44l49shj"))
-                    Case 2
-                        Hint("游戏将以试玩模式启动！", HintType.Critical)
-                        CurrentLaunchOptions.ExtraArgs.Add("--demo")
-                    Case 3
-                        Throw New Exception("$$")
-                End Select
-            End If
-        End If
     End Sub
 
 #End Region

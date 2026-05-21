@@ -1885,12 +1885,14 @@ Retry:
         ''' 将当前文件信息实例化为控件。
         ''' </summary>
         Public Function ToListItem(OnClick As MyListItem.ClickEventHandler, Optional OnSaveClick As MyIconButton.ClickEventHandler = Nothing,
-                                   Optional BadDisplayName As Boolean = False) As MyVirtualizingElement(Of MyListItem)
+                                   Optional BadDisplayName As Boolean = False, Optional IsRecommended As Boolean = False) As MyVirtualizingElement(Of MyListItem)
+            Dim recommended = IsRecommended
             Return New MyVirtualizingElement(Of MyListItem)(
             Function()
                 '获取描述信息
                 Dim Title As String = If(BadDisplayName, FileName, DisplayName)
                 Dim Info As New List(Of String)
+                If recommended Then Info.Add("★ 推荐")
                 If Title <> FileName.BeforeLast(".") Then Info.Add(FileName.BeforeLast("."))
                 If Dependencies.Any Then Info.Add(Dependencies.Count & " 项前置")
                 If GameVersions.All(
@@ -1918,6 +1920,11 @@ Retry:
                         NewItem.Logo = PathImage & "Icons/A.png"
                 End Select
                 AddHandler NewItem.Click, OnClick
+
+                '推荐版本高亮标记
+                If recommended Then
+                    NewItem.Tags = "推荐版本"
+                End If
 
                 '建立另存为按钮
                 If OnSaveClick IsNot Nothing Then
