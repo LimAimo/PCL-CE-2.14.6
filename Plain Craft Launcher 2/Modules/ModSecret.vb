@@ -265,6 +265,12 @@ PCL-Community 及其成员与龙腾猫跃无从属关系，且均不会为您的
                 Dim bgBrush = New SolidColorBrush(Color.FromArgb(If(ThemeService.IsDarkMode, CByte(20), CByte(40)), CByte(255), CByte(255), CByte(255)))
                 bgBrush.Freeze()
                 FrmMain.PanForm.Background = bgBrush
+                ' 标题栏也使用半透明背景，让窗口效果扩散到标题栏
+                Dim themeColor = CType(Application.Current.Resources("ColorBrush3"), SolidColorBrush).Color
+                Dim titleBrush = New SolidColorBrush(Color.FromArgb(If(ThemeService.IsDarkMode, CByte(60), CByte(100)),
+                    themeColor.R, themeColor.G, themeColor.B))
+                titleBrush.Freeze()
+                FrmMain.PanTitle.BackgroundBrush = titleBrush
             ElseIf Setup.Get("UiBackgroundColorful") Then
                 Dim Brush = New LinearGradientBrush With {.EndPoint = New Point(0.1, 1), .StartPoint = New Point(0.9, 0)}
                 Dim hue = ThemeService.GetCurrentThemeArgs().Hue
