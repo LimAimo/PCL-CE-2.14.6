@@ -607,8 +607,6 @@ Public Class FormMain
             States.UI.WindowWidth = Width
         End If
         If PanBack IsNot Nothing Then
-            RectForm.Rect = New Rect(0, 0, PanBack.ActualWidth, PanBack.ActualHeight)
-
             Dim formWidth As Double = PanBack.ActualWidth + 0.001
             Dim formHeight As Double = PanBack.ActualHeight + 0.001
 
