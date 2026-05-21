@@ -15,10 +15,6 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" SharedSizeGroup="Name1" />
                                 <ColumnDefinition />
-                                <ColumnDefinition Width="92" SharedSizeGroup="SubName" />
-                                <ColumnDefinition />
-                                <ColumnDefinition SharedSizeGroup="SubName" />
-                                <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="主题"/>
@@ -27,13 +23,6 @@
                                 <local:MyComboBoxItem Content="深色"/>
                                 <local:MyComboBoxItem Content="跟随系统"/> <!-- default -->
                             </local:MyComboBox>
-
-                            <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Text="浅色配色"/>
-                            <local:MyComboBox Grid.Column="3" x:Name="ComboLightColor" Tag="UiLightColor" ItemsSource="{Binding ThemeColors}"/>
-
-                            <TextBlock Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" Text="深色配色"/>
-                            <local:MyComboBox Grid.Column="5" x:Name="ComboDarkColor" Tag="UiDarkColor" ItemsSource="{Binding ThemeColors}"/>
-
                         </Grid>
                         <StackPanel x:Name="PanelBackdrop" Margin="0,0,0,10">
                             <Grid>

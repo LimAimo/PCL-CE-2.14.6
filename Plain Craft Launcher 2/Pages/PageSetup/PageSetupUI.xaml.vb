@@ -7,9 +7,6 @@ Public Class PageSetupUI
 
     Public Shadows IsLoaded As Boolean = False
 
-    Public ReadOnly Property ThemeColors As String() =
-        If(Basics.IsAprilFool, {"天空蓝", "龙猫蓝", "死机蓝", "HMCL"}, {"天空蓝", "龙猫蓝", "死机蓝"})
-
     Public Sub New()
         InitializeComponent()
     End Sub
@@ -65,13 +62,6 @@ Public Class PageSetupUI
             '启动器
             'If Setup.Get("UiLauncherTheme") <= 14 Then CType(FindName("RadioLauncherTheme" & Setup.Get("UiLauncherTheme")), MyRadioBox).Checked = True
             ComboDarkMode.SelectedIndex = Setup.Get("UiDarkMode")
-            If Not Basics.IsAprilFool Then
-                'fix ui state error
-                If Setup.Get("UiDarkColor") = ColorTheme.HmclBlue Then Setup.Set("UiDarkColor", ColorTheme.CatBlue)
-                If Setup.Get("UiLightColor") = ColorTheme.HmclBlue Then Setup.Set("UiLightColor", ColorTheme.CatBlue)
-            End If
-            ComboDarkColor.SelectedIndex = Setup.Get("UiDarkColor")
-            ComboLightColor.SelectedIndex = Setup.Get("UiLightColor")
 
             '字体设置
             ComboUiFont.SelectedFontTag = Setup.Get("UiFont")
@@ -304,12 +294,6 @@ Refresh:
                  vbCrLf &
                  "你可以在生成教学文件后直接刷新主页，对照着进行修改，更有助于理解。" & vbCrLf &
                  "直接将主页文件拖进 PCL 窗口也可以快捷加载。", "主页自定义教程")
-    End Sub
-
-    '主题
-    Private Sub ThemeColor_Change(sender As MyComboBox, e As EventArgs) Handles ComboDarkColor.SelectionChanged, ComboLightColor.SelectionChanged
-        Setup.Set(sender.Tag, sender.SelectedIndex)
-        ThemeRefresh()
     End Sub
 
     '主题自定义（已移除相关控件）
