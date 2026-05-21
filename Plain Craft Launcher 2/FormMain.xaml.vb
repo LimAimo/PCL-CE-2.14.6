@@ -479,10 +479,10 @@ Public Class FormMain
         If hwnd = IntPtr.Zero Then Return
 
         Dim backdropType As WindowBackdropType = Config.Preference.Blur.BackdropType
-        Dim intensity As Integer = Config.Preference.Blur.BackdropIntensity
 
         ' 设置深色模式属性（影响 Mica 颜色）
         WindowInterop.SetImmersiveDarkMode(hwnd, ThemeService.IsDarkMode)
+
         ' 映射配置枚举到 DWM 枚举
         Dim dwmBackdrop As WindowInterop.DwmSystemBackdropType
         Select Case backdropType
@@ -496,18 +496,9 @@ Public Class FormMain
                 dwmBackdrop = WindowInterop.DwmSystemBackdropType.None
         End Select
 
-        ' 根据强度值决定是否应用效果（0表示禁用）
-        If intensity > 0 Then
-            WindowInterop.SetSystemBackdropType(hwnd, dwmBackdrop)
-        Else
-            WindowInterop.SetSystemBackdropType(hwnd, WindowInterop.DwmSystemBackdropType.None)
-        End If
-
+        WindowInterop.SetSystemBackdropType(hwnd, dwmBackdrop)
         ' 启用 Windows 11 原生圆角
         WindowInterop.SetWindowCornerPreference(hwnd, WindowInterop.DwmWindowCornerPreference.Round)
-
-        ' TODO: 强度值可用于未来实现更精细的效果控制，
-        ' 例如通过调整窗口透明度或混合自定义背景来实现渐变效果
     End Sub
 
     '关闭
