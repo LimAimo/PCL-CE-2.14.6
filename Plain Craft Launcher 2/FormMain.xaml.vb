@@ -39,10 +39,10 @@ Public Class FormMain
         'ThemeCheckAll(False)
         'ThemeRefreshColor()
         AddHandler ThemeService.ColorModeChanged, Sub(mode, theme)
-                                                       ThemeRefresh()
-                                                       ' 更新 DWM 深色模式属性以匹配 Mica 颜色
-                                                       ApplySystemBackdrop()
-                                                   End Sub
+                                                      ThemeRefresh()
+                                                      ' 更新 DWM 深色模式属性以匹配 Mica 颜色
+                                                      ApplySystemBackdrop()
+                                                  End Sub
         AddHandler ThemeService.ColorThemeChanged, AddressOf ThemeRefresh
         '窗体参数初始化
         FrmMain = Me
@@ -58,7 +58,7 @@ Public Class FormMain
                     Log("[Start] 遥测策略变更：由旧版本升级到含新版遥测的版本，已重置遥测设置")
                 End If
             End If
-            
+
             '触发升级
             UpgradeSub(LastVersion)
         ElseIf LastVersion > VersionCode Then
@@ -98,7 +98,7 @@ Public Class FormMain
             Width = MinWidth + 100
         End Try
         '管理员权限下文件拖拽
-        If ProcessInterop.IsAdmin() Then 
+        If ProcessInterop.IsAdmin() Then
             Log("[Start] PCL 当前正以管理员权限运行")
             Static helper As New DragHelper()
             AddHandler Me.SourceInitialized,
@@ -108,8 +108,8 @@ Public Class FormMain
                     helper.AddHook()
                 End Sub
 
-            AddHandler Me.Closing,Sub() helper.RemoveHook()
-            AddHandler Helper.DragDrop, Sub() FileDrag(helper.DropFilePaths)
+            AddHandler Me.Closing, Sub() helper.RemoveHook()
+            AddHandler helper.DragDrop, Sub() FileDrag(helper.DropFilePaths)
         End If
         If Not IsNothing(FrmLaunchLeft.Parent) Then FrmLaunchLeft.SetValue(ContentPresenter.ContentProperty, Nothing)
         If Not IsNothing(FrmLaunchRight.Parent) Then FrmLaunchRight.SetValue(ContentPresenter.ContentProperty, Nothing)
@@ -358,9 +358,9 @@ Public Class FormMain
 #End Region
 
 #Region "自定义窗口"
-    
+
     Private CanResize As Boolean = True
-    
+
     ' 重写窗口边缘判定以使 DWM 自带的 resizer 行为看起来比较正常
     Private Function _SizeWndProc(hWnd As IntPtr, msg As Integer, wParam As IntPtr, lParam As IntPtr, ByRef handled As Boolean) As IntPtr
         ' 窗口活动常量
@@ -374,26 +374,26 @@ Public Class FormMain
         Const HTBOTTOM = 15
         Const HTBOTTOMLEFT = 16
         Const HTBOTTOMRIGHT = 17
-        
+
         ' WPF 尺寸的 offset
         Const offsetWpf = 6
         Const hitWidthWpf = 5
-        
+
         ' 过滤非 WM_NCHITTEST 事件
         If msg <> WM_NCHITTEST Then Return IntPtr.Zero
-        
+
         ' 提取鼠标坐标
         ' 没妈的 VB 强转还得检查一下幻想的妈是不是还活着
         Dim mouseBytes As Byte() = BitConverter.GetBytes(lParam.ToInt64())
         Dim xMouse As Short = BitConverter.ToInt16(mouseBytes, 0)
         Dim yMouse As Short = BitConverter.ToInt16(mouseBytes, 2)
-        
+
         ' 获取窗口参数
         Dim windowRect = WindowInterop.GetWindowRectangle(hWnd)
         Dim windowBounds = windowRect.ToWindowBounds()
 
         ' 判断鼠标是否在窗口范围内
-        Dim isInWindow As Boolean = _
+        Dim isInWindow As Boolean =
                 (xMouse >= windowRect.Left AndAlso xMouse <= windowRect.Right) AndAlso
                 (yMouse >= windowRect.Top AndAlso yMouse <= windowRect.Bottom)
 
@@ -565,7 +565,7 @@ Public Class FormMain
     End Sub
     Private Shared IsLogShown As Boolean = False
     Public Shared Sub EndProgramForce(
-                                            Optional ReturnCode As ProcessReturnValues = ProcessReturnValues.Success, 
+                                            Optional ReturnCode As ProcessReturnValues = ProcessReturnValues.Success,
                                             Optional force As Boolean = True,
                                             Optional isUpdating As Boolean = False)
         'On Error Resume Next
@@ -573,7 +573,7 @@ Public Class FormMain
         'Await LobbyController.CloseAsync().ConfigureAwait(False)
         IsProgramEnded = True
         AniControlEnabled += 1
-        If IsUpdateWaitingRestart AndAlso Not isUpdating Then UpdateRestart(False, triggerRestart := False)
+        If IsUpdateWaitingRestart AndAlso Not isUpdating Then UpdateRestart(False, triggerRestart:=False)
         If ReturnCode = ProcessReturnValues.Exception Then
             If Not IsLogShown Then
                 FeedbackInfo()
@@ -1586,7 +1586,7 @@ Public Class FormMain
     Private Function BtnExtraUpdateRestart_ShowCheck() As Boolean
         Return IsUpdateWaitingRestart
     End Function
-    
+
     '任务管理
     Private Sub BtnExtraDownload_Click(sender As Object, e As EventArgs) Handles BtnExtraDownload.Click
         PageChange(PageType.TaskManager)

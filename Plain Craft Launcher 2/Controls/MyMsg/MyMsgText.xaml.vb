@@ -39,11 +39,11 @@ Public Class MyMsgText
             Btn1.Focus()
             '动画
             Opacity = 0
-            AniStart(AaColor(FrmMain.PanMsgBackground, BlurBorder.BackgroundProperty, If(MyConverter.IsWarn, New MyColor(140, 80, 0, 0), New MyColor(90, 0, 0, 0)) - FrmMain.PanMsgBackground.Background, 200), "PanMsgBackground Background")
+            AniStart(AaColor(FrmMain.PanMsgBackground, BlurBorder.BackgroundProperty, If(MyConverter.IsWarn, New MyColor(140, 80, 0, 0), New MyColor(90, 0, 0, 0)) - FrmMain.PanMsgBackground.Background, 150), "PanMsgBackground Background")
             AniStart({
-                AaOpacity(Me, 1, 120, 60),
-                AaDouble(Sub(i) TransformPos.Y += i, -TransformPos.Y, 300, 60, New AniEaseOutBack(AniEasePower.Weak)),
-                AaDouble(Sub(i) TransformRotate.Angle += i, -TransformRotate.Angle, 300, 60, New AniEaseOutFluent(AniEasePower.Weak))
+                AaOpacity(Me, 1, 120, 30),
+                AaDouble(Sub(i) TransformScale.ScaleX += i, 1 - TransformScale.ScaleX, 150, 30, New AniEaseOutBack(AniEasePower.Weak)),
+                AaDouble(Sub(i) TransformScale.ScaleY += i, 1 - TransformScale.ScaleY, 150, 30, New AniEaseOutBack(AniEasePower.Weak))
             }, "MyMsgBox " & Uuid)
             '记录日志
             Log("[Control] 普通弹窗：" & LabTitle.Text & vbCrLf & LabCaption.Text)
@@ -61,12 +61,12 @@ Public Class MyMsgText
             AaCode(
             Sub()
                 If Not WaitingMyMsgBox.Any() Then
-                    AniStart(AaColor(FrmMain.PanMsgBackground, BlurBorder.BackgroundProperty, New MyColor(0, 0, 0, 0) - FrmMain.PanMsgBackground.Background, 200, Ease:=New AniEaseOutFluent(AniEasePower.Weak)))
+                    AniStart(AaColor(FrmMain.PanMsgBackground, BlurBorder.BackgroundProperty, New MyColor(0, 0, 0, 0) - FrmMain.PanMsgBackground.Background, 150, Ease:=New AniEaseOutFluent(AniEasePower.Weak)))
                 End If
-            End Sub, 30),
-            AaOpacity(Me, -Opacity, 80, 20),
-            AaDouble(Sub(i) TransformPos.Y += i, 20 - TransformPos.Y, 150, 0, New AniEaseOutFluent),
-            AaDouble(Sub(i) TransformRotate.Angle += i, 6 - TransformRotate.Angle, 150, 0, New AniEaseInFluent(AniEasePower.Weak)),
+            End Sub, 20),
+            AaOpacity(Me, -Opacity, 100, 20),
+            AaDouble(Sub(i) TransformScale.ScaleX += i, 0.95 - TransformScale.ScaleX, 100, 20, New AniEaseInFluent(AniEasePower.Weak)),
+            AaDouble(Sub(i) TransformScale.ScaleY += i, 0.95 - TransformScale.ScaleY, 100, 20, New AniEaseInFluent(AniEasePower.Weak)),
             AaCode(Sub() CType(Parent, Grid).Children.Remove(Me), , True)
         }, "MyMsgBox " & Uuid)
     End Sub
