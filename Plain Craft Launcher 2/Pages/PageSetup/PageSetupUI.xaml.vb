@@ -67,7 +67,8 @@ Public Class PageSetupUI
             ComboUiFont.SelectedFontTag = Setup.Get("UiFont")
             ComboUiMotdFont.SelectedFontTag = Setup.Get("UiMotdFont")
             
-            ComboBackdropType.SelectedIndex = Setup.Get("UiBackdropType")
+            ComboBackdropType.SelectedIndex = Setup.Get("UiBackdropType") - 1
+            SliderBackdropIntensity.Value = Setup.Get("UiBackdropIntensity")
             HintBackdropUnsupported.Visibility = If(WindowInterop.IsMicaSupported(), Visibility.Collapsed, Visibility.Visible)
 
             '标题栏
@@ -139,16 +140,24 @@ Public Class PageSetupUI
     End Sub
 
     '将控件改变路由到设置改变
-    Private Shared Sub SliderChange(sender As MySlider, e As Object)
-        If AniControlEnabled = 0 Then Setup.Set(sender.Tag, sender.Value)
+    Private Shared Sub SliderChange(sender As MySlider, e As Object) Handles SliderBackdropIntensity.Change
+        If AniControlEnabled = 0 Then
+            Setup.Set(sender.Tag, sender.Value)
+            ' 调整强度时立即应用
+            If sender.Tag?.ToString() = "UiBackdropIntensity" Then
+                FormMain.ApplySystemBackdrop()
+            End If
+        End If
     End Sub
     Private Shared Sub ComboChange(sender As MyComboBox, e As Object) Handles ComboDarkMode.SelectionChanged, ComboBackdropType.SelectionChanged
         If AniControlEnabled = 0 Then
-            Setup.Set(sender.Tag, sender.SelectedIndex)
-            ' 切换窗口材质时立即应用
+            ' 窗口材质需要调整索引偏移（移除了"无"选项）
             If sender.Tag?.ToString() = "UiBackdropType" Then
+                Setup.Set(sender.Tag, sender.SelectedIndex + 1)
                 FormMain.ApplySystemBackdrop()
                 ThemeRefreshMain()
+            Else
+                Setup.Set(sender.Tag, sender.SelectedIndex)
             End If
         End If
     End Sub

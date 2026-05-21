@@ -336,7 +336,12 @@ public static partial class Config
             /// <summary>
             /// 窗口背景材质类型（Mica/Acrylic/无）。
             /// </summary>
-            [ConfigItem<WindowBackdropType>("UiBackdropType", WindowBackdropType.None, ConfigSource.Local)] public partial WindowBackdropType BackdropType { get; set; }
+            [ConfigItem<WindowBackdropType>("UiBackdropType", WindowBackdropType.Mica, ConfigSource.Local)] public partial WindowBackdropType BackdropType { get; set; }
+
+            /// <summary>
+            /// 背景材质效果强度 (0-100)，值越大效果越明显。
+            /// </summary>
+            [ConfigItem<int>("UiBackdropIntensity", 80, ConfigSource.Local)] public partial int BackdropIntensity { get; set; }
         }
 
         /// <summary>

@@ -34,13 +34,22 @@
                                 <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="窗口材质" />
                                 <local:MyComboBox Grid.Column="2" x:Name="ComboBackdropType" Tag="UiBackdropType" Height="28" MinWidth="140"
                                     ToolTip="设置窗口背景材质效果。&#xa;需要 Windows 11 22H2 及以上版本。&#xa;启用后将替代自定义背景图片。">
-                                    <local:MyComboBoxItem Content="无" ToolTip="不使用系统背景材质，使用自定义背景。"/>
                                     <local:MyComboBoxItem Content="云母 (Mica)" ToolTip="Windows 11 云母效果，从桌面壁纸中提取颜色，呈现半透明磨砂质感。"/>
                                     <local:MyComboBoxItem Content="云母变体 (Mica Alt)" ToolTip="云母效果的变体，颜色更深，适合需要更高对比度的场景。"/>
                                     <local:MyComboBoxItem Content="亚克力 (Acrylic)" ToolTip="亚克力效果，呈现半透明模糊的背景，可以看到窗口后面的内容。"/>
                                 </local:MyComboBox>
                             </Grid>
-                            <local:MyHint x:Name="HintBackdropUnsupported" Margin="0,8,0,0" IsWarn="True" 
+                            <Grid Margin="0,10,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Name1" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="效果强度" />
+                                <local:MySlider Grid.Column="1" x:Name="SliderBackdropIntensity" Tag="UiBackdropIntensity"
+                                    Height="28" MinWidth="200" MaxValue="100"
+                                    ToolTip="调整背景材质效果的强度。&#xa;值越大，效果越明显；值越小，效果越淡。" Margin="15,0,0,0" />
+                            </Grid>
+                            <local:MyHint x:Name="HintBackdropUnsupported" Margin="0,8,0,0" IsWarn="True"
                                 Text="当前系统不支持窗口材质效果，需要 Windows 11 22H2 及以上版本。" Visibility="Collapsed" />
                         </StackPanel>
                     </StackPanel>

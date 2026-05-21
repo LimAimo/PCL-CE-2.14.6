@@ -1,0 +1,1 @@
+dotnet publish "Plain Craft Launcher 2/Plain Craft Launcher 2.vbproj" -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true
