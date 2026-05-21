@@ -4,9 +4,6 @@
       xmlns:local="clr-namespace:PCL"
       Height="64" Width="64" UseLayoutRounding="True" RenderTransformOrigin="0.5,0.5" Background="{StaticResource ColorBrushSemiTransparent}"
       ToolTipService.Placement="Center" ToolTipService.VerticalOffset="-50" ToolTipService.HorizontalOffset="2" ToolTipService.InitialShowDelay="100">
-    <Grid.Effect>
-        <DropShadowEffect x:Name="ShadowSkin" BlurRadius="10" ShadowDepth="0" Color="{DynamicResource ColorObject2}" Opacity="0.2" />
-    </Grid.Effect>
     <Grid.RenderTransform>
         <ScaleTransform />
     </Grid.RenderTransform>

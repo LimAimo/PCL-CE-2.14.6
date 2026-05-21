@@ -144,18 +144,14 @@ Public Class MyCard
     End Sub
 
     '动画
-    Private Const DropShadowIdleOpacity As Double = 0.07
-    Private Const DropShadowHoverOpacity As Double = 0.4
+    Private Const DropShadowIdleOpacity As Double = 0
+    Private Const DropShadowHoverOpacity As Double = 0
     Public Property HasMouseAnimation As Boolean = True
     Private Sub MyCard_MouseEnter(sender As Object, e As MouseEventArgs) Handles Me.MouseEnter
         If Not HasMouseAnimation Then Return
         Dim AniList As New List(Of AniData)
         If Not IsNothing(MainTextBlock) Then AniList.Add(AaColor(MainTextBlock, TextBlock.ForegroundProperty, "ColorBrush2", 90))
         If Not IsNothing(MainSwap) Then AniList.Add(AaColor(MainSwap, Shapes.Path.FillProperty, "ColorBrush2", 90))
-        AniList.AddRange({
-            AaColor(MainChrome, MyDropShadow.ColorProperty, "ColorObject4", 90),
-            AaOpacity(MainChrome, DropShadowHoverOpacity - MainChrome.Opacity, 90)
-        })
         If Not IsAnimating Then AniStart(AniList, "MyCard Mouse " & Uuid)
     End Sub
     Private Sub MyCard_MouseLeave(sender As Object, e As MouseEventArgs) Handles Me.MouseLeave
@@ -163,10 +159,6 @@ Public Class MyCard
         Dim AniList As New List(Of AniData)
         If Not IsNothing(MainTextBlock) Then AniList.Add(AaColor(MainTextBlock, TextBlock.ForegroundProperty, "ColorBrush1", 90))
         If Not IsNothing(MainSwap) Then AniList.Add(AaColor(MainSwap, Shapes.Path.FillProperty, "ColorBrush1", 90))
-        AniList.AddRange({
-            AaColor(MainChrome, MyDropShadow.ColorProperty, "ColorObject1", 90),
-            AaOpacity(MainChrome, DropShadowIdleOpacity - MainChrome.Opacity, 90)
-        })
         If Not IsAnimating Then AniStart(AniList, "MyCard Mouse " & Uuid)
     End Sub
 
