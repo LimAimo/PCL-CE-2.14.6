@@ -1,10 +1,5 @@
 Imports System.Runtime.InteropServices
 Imports PCL.Core.App
-Imports PCL.Core.Link.EasyTier
-Imports PCL.Core.Link.Lobby
-Imports PCL.Core.Link.McPing
-Imports PCL.Core.Link.McPing.Model
-Imports PCL.Core.Link.Natayark.NatayarkProfileManager
 Imports PCL.Core.Utils.OS
 
 Public Module ModLink
@@ -73,88 +68,15 @@ Public Module ModLink
     End Class
 #End Region
 
-#Region "Minecraft 实例探测"
-    Public Async Function MCInstanceFinding() As Task(Of List(Of Tuple(Of Integer, McPingResult, String)))
-        'Java 进程 PID 查询
-        Dim PIDLookupResult As New List(Of String)
-        Dim JavaNames As New List(Of String)
-        JavaNames.Add("java")
-        JavaNames.Add("javaw")
-
-        For Each TargetJava In JavaNames
-            Dim JavaProcesses As Process() = Process.GetProcessesByName(TargetJava)
-            Log($"[MCDetect] 找到 {TargetJava} 进程 {JavaProcesses.Length} 个")
-
-            If JavaProcesses Is Nothing OrElse JavaProcesses.Length = 0 Then
-                Continue For
-            Else
-                For Each p In JavaProcesses
-                    Log("[MCDetect] 检测到 Java 进程，PID: " + p.Id.ToString())
-                    PIDLookupResult.Add(p.Id.ToString())
-                Next
-            End If
-        Next
-
-        Dim res As New List(Of Tuple(Of Integer, McPingResult, String))
-        Try
-            If Not PIDLookupResult.Any Then Return res
-            Dim lookupList As New List(Of Tuple(Of Integer, Integer))
-            For Each pid In PIDLookupResult
-                Dim infos As New List(Of Tuple(Of Integer, Integer))
-                Dim ports = PortFinder.GetProcessPort(Integer.Parse(pid))
-                For Each port In ports
-                    infos.Add(New Tuple(Of Integer, Integer)(port, pid))
-                Next
-                lookupList.AddRange(infos)
-            Next
-            Log($"[MCDetect] 获取到端口数量 {lookupList.Count}")
-            '并行查找本地，超时 3s 自动放弃
-            Dim checkTasks = lookupList.Select(
-                Function(lookup) Task.Run(
-                    Async Function()
-                        Log($"[MCDetect] 找到疑似端口，开始验证：{lookup}")
-                        Using test = McPingServiceFactory.CreateService("127.0.0.1", lookup.Item1, 3000)
-                            Dim info As McPingResult
-                            Try
-                                info = Await test.PingAsync()
-                                Dim launcher = GetLauncherBrand(lookup.Item2)
-                                If Not String.IsNullOrWhiteSpace(info.Version.Name) Then
-                                    Log($"[MCDetect] 端口 {lookup} 为有效 Minecraft 世界")
-                                    res.Add(New Tuple(Of Integer, McPingResult, String)(lookup.Item1, info, launcher))
-                                    Return Task.CompletedTask
-                                End If
-                            Catch ex As Exception
-                                If TypeOf ex.InnerException Is ObjectDisposedException Then
-                                    Log($"[McDetect] {lookup} 验证超时，已强制断开连接，将尝试旧版检测")
-                                Else
-                                    Log(ex, $"[McDetect] {lookup} 验证出错，将尝试旧版检测")
-                                End If
-                            End Try
-                        End Using
-                        Using test = McPingServiceFactory.CreateLegacyService("127.0.0.1", lookup.Item1, 3000)
-                            Try
-                                Dim info = Await test.PingAsync()
-                                If Not String.IsNullOrWhiteSpace(info.Version.Name) Then
-                                    Log($"[MCDetect] 端口 {lookup} 为有效 Minecraft 世界")
-                                    res.Add(New Tuple(Of Integer, McPingResult, String)(lookup.Item1, info, String.Empty))
-                                    Return Task.CompletedTask
-                                End If
-                            Catch ex As Exception
-                                If TypeOf ex.InnerException Is ObjectDisposedException Then
-                                    Log($"[McDetect] {lookup} 验证超时，已强制断开连接")
-                                Else
-                                    Log(ex, $"[McDetect] {lookup} 验证出错")
-                                End If
-                            End Try
-                        End Using
-                        Return Task.CompletedTask
-                    End Function)).ToArray()
-            Await Task.WhenAll(checkTasks)
-        Catch ex As Exception
-            Log(ex, "[MCDetect] 获取端口信息错误", LogLevel.Debug)
-        End Try
-        Return res
+#Region "Minecraft 实例探测（已简化）"
+    ''' <summary>
+    ''' Minecraft 实例探测功能已简化（McPing 模块已移除）
+    ''' </summary>
+    Public Async Function MCInstanceFinding() As Task(Of List(Of Tuple(Of Integer, Object, String)))
+        Log("[MCDetect] Minecraft 实例探测功能已禁用（Link 模块已移除）", LogLevel.Hint)
+        Return New List(Of Tuple(Of Integer, Object, String))()
     End Function
+
     Public Function GetLauncherBrand(pid As Integer) As String
         Try
             Dim cmd = ProcessInterop.GetCommandLine(pid)
@@ -170,118 +92,23 @@ Public Module ModLink
     End Function
 #End Region
 
-#Region "EasyTier"
-    Public DlEasyTierLoader As LoaderCombo(Of JObject) = Nothing
-    Public Function DownloadEasyTier()
-        Dim dlTargetPath As String = PathTemp + $"EasyTier\EasyTier-{ETInfoProvider.ETVersion}.zip"
-        RunInNewThread(Sub()
-                           Try
-                               '构造步骤加载器
-                               Dim loaders As New List(Of LoaderBase)
-                               '下载
-                               Dim address As New List(Of String)
-                               address.Add($"https://staticassets.naids.com/resources/pclce/static/easytier/easytier-windows-{If(IsArm64System, "arm64", "x86_64")}-v{ETInfoProvider.ETVersion}.zip")
-                               address.Add($"https://s3.pysio.online/pcl2-ce/static/easytier/easytier-windows-{If(IsArm64System, "arm64", "x86_64")}-v{ETInfoProvider.ETVersion}.zip")
-
-                               loaders.Add(New LoaderDownload("下载 EasyTier", New List(Of NetFile) From {New NetFile(address.ToArray, dlTargetPath, New FileChecker(MinSize:=1024 * 64))}) With {.ProgressWeight = 15})
-                               loaders.Add(New LoaderTask(Of Integer, Integer)("解压文件", Sub() ExtractFile(dlTargetPath, IO.Path.Combine(Paths.SharedLocalData, "EasyTier", ETInfoProvider.ETVersion))) With {.Block = True})
-                               loaders.Add(New LoaderTask(Of Integer, Integer)("清理缓存与冗余组件", Sub()
-                                                                                                File.Delete(dlTargetPath)
-                                                                                                CleanupEasyTierCache()
-                                                                                            End Sub))
-                               loaders.Add(New LoaderTask(Of Integer, Integer)("刷新界面", Sub() Hint("联机组件下载完成！", HintType.Finish)) With {.Show = False})
-                               '启动
-                               DlEasyTierLoader = New LoaderCombo(Of JObject)("大厅初始化", loaders)
-                               DlEasyTierLoader.Start()
-                               LoaderTaskbarAdd(DlEasyTierLoader)
-                               FrmMain.BtnExtraDownload.ShowRefresh()
-                               FrmMain.BtnExtraDownload.Ribble()
-                           Catch ex As Exception
-                               Log(ex, "[Link] 下载 EasyTier 依赖文件失败", LogLevel.Hint)
-                               Hint("下载 EasyTier 依赖文件失败，请检查网络连接", HintType.Critical)
-                           End Try
-                       End Sub)
+#Region "EasyTier（已禁用）"
+    ''' <summary>
+    ''' EasyTier 下载功能已禁用（Link 模块已移除）
+    ''' </summary>
+    Public Function DownloadEasyTier() As Integer
+        Log("[Link] EasyTier 下载功能已禁用", LogLevel.Hint)
         Return 0
     End Function
-    Private Sub CleanupEasyTierCache()
-        Dim subDirs As String() = Directory.GetDirectories(IO.Path.Combine(Paths.SharedLocalData, "EasyTier"))
-        For Each folderPath As String In subDirs
-            Dim name As String = IO.Path.GetFileName(folderPath)
-            If Not name.Equals(ETInfoProvider.ETVersion) Then
-                Try
-                    Directory.Delete(folderPath, True)
-                Catch ex As Exception
-                    Log(ex, "[Link] 清理旧版本 EasyTier 出错")
-                End Try
-            End If
-        Next
-    End Sub
-
 #End Region
 
-#Region "大厅操作"
+#Region "大厅操作（已禁用）"
+    ''' <summary>
+    ''' 大厅预检查功能已禁用（Link 模块已移除）
+    ''' </summary>
     Public Function LobbyPrecheck() As Boolean
-        If Not LobbyInfoProvider.IsLobbyAvailable Then
-            Hint("大厅功能暂不可用，请稍后再试", HintType.Critical)
-            Return False
-        End If
-        If SelectedProfile IsNot Nothing Then
-            If SelectedProfile.Username.Contains("|") Then
-                Hint("MC 玩家 ID 不可包含分隔符 (|) ！")
-                Return False
-            End If
-        End If
-        If LobbyInfoProvider.RequiresLogin Then
-            If String.IsNullOrWhiteSpace(Setup.Get("LinkNaidRefreshToken")) Then
-                Hint("请先前往联机设置并登录至 Natayark Network 再进行联机！", HintType.Critical)
-                Return False
-            End If
-            Try
-                GetNaidDataAsync(Setup.Get("LinkNaidRefreshToken"), True).GetAwaiter().GetResult()
-            Catch ex As Exception
-                Log("[Link] 刷新 Natayark ID 信息失败，需要重新登录")
-                Hint("请重新登录 Natayark Network 账号再试！", HintType.Critical)
-                Return False
-            End Try
-            Dim waitCount As Integer = 0
-            While String.IsNullOrWhiteSpace(NaidProfile.Username)
-                If waitCount > 30 Then Exit While
-                Thread.Sleep(500)
-                waitCount += 1
-            End While
-            If String.IsNullOrWhiteSpace(NaidProfile.Username) Then
-                Hint("尝试获取 Natayark ID 信息失败", HintType.Critical)
-                Return False
-            End If
-            If LobbyInfoProvider.RequiresRealName AndAlso Not NaidProfile.IsRealNamed Then
-                Hint("请先前往 Natayark 账户中心进行实名验证再尝试操作！", HintType.Critical)
-                Return False
-            End If
-            If Not NaidProfile.Status = 0 Then
-                Hint("你的 Natayark Network 账号状态异常，可能已被封禁！", HintType.Critical)
-                Return False
-            End If
-        End If
-        If String.IsNullOrWhiteSpace(Setup.Get("LinkUsername")) AndAlso String.IsNullOrWhiteSpace(NaidProfile.Username) Then
-            Hint("请先前往设置输入一个用户名，或登录至 Natayark Network 再进行联机！", HintType.Critical)
-            Return False
-        End If
-        If ETController.Precheck() = 1 Then
-            Hint("正在下载联机依赖组件，请稍后...")
-            DownloadEasyTier()
-            Return False
-        End If
-        If DlEasyTierLoader IsNot Nothing Then
-            If DlEasyTierLoader.State = LoadState.Loading Then
-                Hint("EasyTier 尚未下载完成，请等待其下载完成后再试！")
-                Return False
-            ElseIf DlEasyTierLoader.State = LoadState.Failed OrElse DlEasyTierLoader.State = LoadState.Aborted Then
-                Hint("正在下载 EasyTier，请稍后...")
-                DownloadEasyTier()
-                Return False
-            End If
-        End If
-        Return True
+        Hint("联机大厅功能已禁用", HintType.Critical)
+        Return False
     End Function
 #End Region
 

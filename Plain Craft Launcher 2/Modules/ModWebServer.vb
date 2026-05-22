@@ -1,6 +1,5 @@
 Imports System.Threading.Tasks
 Imports PCL.Core.IO.Net.Http
-Imports PCL.Core.Link.Natayark
 
 Public Module ModWebServer
 
@@ -225,29 +224,8 @@ Public Module ModWebServer
     End Function
 
     Public Sub StartNaidAuthorize(Optional completeCallback As Action = Nothing)
-        StartOAuthWaitingCallback("NatayarkID", $"https://account.naids.com/oauth2/authorize?response_type=code&client_id={NatayarkClientId}&redirect_uri=%r",
-            Function(success, parameters, content)
-                If Not success Then
-                    MyMsgBox(content, IsWarn:=True)
-                    completeCallback?.Invoke()
-                    Return Nothing
-                End If
-                Dim status As OAuthCompleteStatus = Nothing
-                Dim code = parameters("code")
-                Dim resultEx As Exception = Nothing
-                Try
-                    NatayarkProfileManager.GetNaidDataAsync(code, port:=UShort.Parse(parameters("Port"))).Wait()
-                Catch ex As AggregateException
-                    resultEx = ex.InnerExceptions(0)
-                End Try
-                If resultEx Is Nothing Then
-                    status = OAuthCompleteStatus.Complete(NatayarkProfileManager.NaidProfile.Username)
-                Else
-                    status = OAuthCompleteStatus.Failed("获取用户信息失败，请尝试重新登录", resultEx)
-                End If
-                completeCallback?.Invoke()
-                Return status
-            End Function)
+        ' Natayark OAuth 功能已移除（Link 模块已删除）
+        Log("[WebServer] Natayark OAuth 登录功能已禁用", LogLevel.Hint)
     End Sub
 
 #End Region
@@ -301,15 +279,9 @@ Public Module ModWebServer
 
                     '设置状态信息
                     If OAuthCode IsNot Nothing Then
-                        Dim result = NatayarkProfileManager.GetNaidDataSync(OAuthCode)
-                        If result Then
-                            CurrentStatus.success = True
-                            CurrentStatus.username = NatayarkProfileManager.NaidProfile.Username
-                        Else
-                            CurrentStatus.success = False
-                            CurrentStatus.message = $"获取用户信息失败，请尝试重新登录"
-                            CurrentStatus.stacktrace = NatayarkProfileManager.Exception.ToString()
-                        End If
+                        ' Natayark 功能已移除，旧代码已禁用
+                        CurrentStatus.success = False
+                        CurrentStatus.message = "Natayark OAuth 功能已禁用"
                     Else
                         CurrentStatus.success = False
                         CurrentStatus.message = $"回调参数无效: {Query}"

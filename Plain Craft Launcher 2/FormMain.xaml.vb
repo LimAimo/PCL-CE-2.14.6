@@ -1053,7 +1053,7 @@ Public Class FormMain
         ''' </summary>
         Download = 1
         ''' <summary>
-        ''' 联机。
+        ''' 工具。
         ''' </summary>
         Tools = 3
         ''' <summary>
@@ -1116,18 +1116,15 @@ Public Class FormMain
         SetupLaunch = 0
         SetupUI = 1
         SetupGameManage = 2
-        SetupLink = 3
-        SetupAbout = 4
-        SetupLog = 5
-        SetupFeedback = 6
-        SetupGameLink = 7
-        SetupUpdate = 8
-        SetupJava = 9
-        SetupLauncherMisc = 10
+        SetupAbout = 3
+        SetupLog = 4
+        SetupFeedback = 5
+        SetupUpdate = 6
+        SetupJava = 7
+        SetupLauncherMisc = 8
 
-        ToolsGameLink = 1
-        ToolsLauncherHelp = 2
-        ToolsTest = 3
+        ToolsLauncherHelp = 1
+        ToolsTest = 2
 
         VersionOverall = 0
         VersionSetup = 1

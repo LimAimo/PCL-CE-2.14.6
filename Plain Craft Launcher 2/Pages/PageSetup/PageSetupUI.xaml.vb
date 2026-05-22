@@ -93,12 +93,10 @@ Public Class PageSetupUI
             CheckHiddenSetupGameManage.Checked = uiHidden.SetupGameManage
             CheckHiddenSetupJava.Checked = uiHidden.SetupJava
             CheckHiddenLauncherMisc.Checked = uiHidden.SetupLauncherMisc
-            CheckHiddenSetupGameLink.Checked = uiHidden.SetupGameLink
             CheckHiddenSetupAbout.Checked = uiHidden.SetupAbout
             CheckHiddenSetupLog.Checked = uiHidden.SetupLog
 
             ' 子页面 工具
-            CheckHiddenToolsGameLink.Checked = uiHidden.ToolsGameLink
             CheckHiddenToolsHelp.Checked = uiHidden.ToolsHelp
             CheckHiddenToolsTest.Checked = uiHidden.ToolsTest
 
@@ -155,12 +153,12 @@ Public Class PageSetupUI
         End If
     End Sub
     Private Shared Sub CheckBoxChange(sender As MyCheckBox, e As Object) Handles _
-    CheckLogoLeft.Change,
-    CheckHiddenFunctionHidden.Change, CheckHiddenFunctionSelect.Change, CheckHiddenFunctionModUpdate.Change,
-    CheckHiddenPageDownload.Change, CheckHiddenPageSetup.Change, CheckHiddenPageTools.Change,
-    CheckHiddenSetupLaunch.Change, CheckHiddenSetupUI.Change, CheckHiddenLauncherMisc.Change, CheckHiddenSetupGameLink.Change,
-    CheckHiddenSetupAbout.Change, CheckHiddenSetupLog.Change, CheckHiddenSetupGameManage.Change,
-    CheckHiddenToolsGameLink.Change, CheckHiddenToolsHelp.Change, CheckHiddenToolsTest.Change, CheckHiddenSetupJava.Change,
+        CheckLogoLeft.Change,
+        CheckHiddenFunctionHidden.Change, CheckHiddenFunctionSelect.Change, CheckHiddenFunctionModUpdate.Change,
+        CheckHiddenPageDownload.Change, CheckHiddenPageSetup.Change, CheckHiddenPageTools.Change,
+        CheckHiddenSetupLaunch.Change, CheckHiddenSetupUI.Change, CheckHiddenLauncherMisc.Change,
+        CheckHiddenSetupAbout.Change, CheckHiddenSetupLog.Change, CheckHiddenSetupGameManage.Change,
+        CheckHiddenSetupJava.Change, CheckHiddenToolsHelp.Change, CheckHiddenToolsTest.Change,
     CheckHiddenVersionEdit.Change, CheckHiddenVersionExport.Change, CheckHiddenVersionSave.Change,
     CheckHiddenVersionScreenshot.Change, CheckHiddenVersionMod.Change, CheckHiddenVersionResourcePack.Change,
     CheckHiddenVersionShader.Change, CheckHiddenVersionSchematic.Change, CheckHiddenVersionServer.Change
@@ -356,7 +354,6 @@ Refresh:
                 If Not conf.SetupGameManage Then SetupCount += 1
                 If Not conf.SetupLauncherMisc Then SetupCount += 1
                 If Not conf.SetupJava Then SetupCount += 1
-                If Not conf.SetupGameLink Then SetupCount += 1
                 If Not conf.SetupAbout Then SetupCount += 1
                 If Not conf.SetupLog Then SetupCount += 1
                 FrmSetupLeft.PanItem.Visibility = If(SetupCount < 2 AndAlso Not HiddenForceShow, Visibility.Collapsed, Visibility.Visible)
@@ -380,7 +377,6 @@ Refresh:
         CheckHiddenSetupGameManage.Checked = IsChecked
         CheckHiddenLauncherMisc.Checked = IsChecked
         CheckHiddenSetupJava.Checked = IsChecked
-        CheckHiddenSetupGameLink.Checked = IsChecked
         CheckHiddenSetupAbout.Checked = IsChecked
         CheckHiddenSetupLog.Checked = IsChecked
     End Sub
@@ -394,20 +390,19 @@ Refresh:
         CheckHiddenSetupGameManage.Checked = IsChecked
         CheckHiddenLauncherMisc.Checked = IsChecked
         CheckHiddenSetupJava.Checked = IsChecked
-        CheckHiddenSetupGameLink.Checked = IsChecked
         CheckHiddenSetupAbout.Checked = IsChecked
         CheckHiddenSetupLog.Checked = IsChecked
     End Sub
 
     Private Sub HiddenSetupSub(sender As Object, user As Boolean) Handles CheckHiddenSetupLaunch.Change, CheckHiddenSetupUI.Change,
-    CheckHiddenSetupJava.Change, CheckHiddenSetupGameManage.Change, CheckHiddenLauncherMisc.Change, CheckHiddenSetupGameLink.Change,
+    CheckHiddenSetupJava.Change, CheckHiddenSetupGameManage.Change, CheckHiddenLauncherMisc.Change,
     CheckHiddenSetupAbout.Change, CheckHiddenSetupLog.Change
 
         If Not user Then Return
         Dim conf = Config.Preference.Hide
         ' 判断是否全部勾选
         Dim AllChecked As Boolean = conf.SetupLaunch AndAlso conf.SetupUi AndAlso conf.SetupJava AndAlso
-                               conf.SetupGameLink AndAlso conf.SetupAbout AndAlso
+                               conf.SetupAbout AndAlso
                                conf.SetupLog AndAlso conf.SetupLauncherMisc AndAlso conf.SetupGameManage
         CheckHiddenPageSetup.Checked = AllChecked
     End Sub
@@ -416,17 +411,16 @@ Refresh:
     Private Sub HiddenToolsMain(sender As Object, user As Boolean) Handles CheckHiddenPageTools.Change
         If Not user Then Return
         Dim IsChecked As Boolean = CheckHiddenPageTools.Checked
-        CheckHiddenToolsGameLink.Checked = IsChecked
         CheckHiddenToolsHelp.Checked = IsChecked
         CheckHiddenToolsTest.Checked = IsChecked
     End Sub
 
-    Private Sub HiddenToolsSub(sender As Object, user As Boolean) Handles CheckHiddenToolsGameLink.Change,
+    Private Sub HiddenToolsSub(sender As Object, user As Boolean) Handles CheckHiddenToolsHelp.Change,
     CheckHiddenToolsHelp.Change, CheckHiddenToolsTest.Change
 
         If Not user Then Return
         Dim conf = Config.Preference.Hide
-        Dim AllChecked As Boolean = conf.ToolsGameLink AndAlso conf.ToolsHelp AndAlso conf.ToolsTest
+        Dim AllChecked As Boolean = conf.ToolsHelp AndAlso conf.ToolsTest
         CheckHiddenPageTools.Checked = AllChecked
     End Sub
 

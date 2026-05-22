@@ -109,12 +109,6 @@ Public Class PageSetupLeft
             Case FormMain.PageSubType.SetupLog
                 If FrmSetupLog Is Nothing Then FrmSetupLog = New PageSetupLog
                 Return FrmSetupLog
-            Case FormMain.PageSubType.SetupGameLink
-                If FrmToolsTest Is Nothing Then FrmToolsTest = New PageToolsTest
-                Return FrmToolsTest
-            Case FormMain.PageSubType.SetupLink
-                If FrmToolsTest Is Nothing Then FrmToolsTest = New PageToolsTest
-                Return FrmToolsTest
             Case FormMain.PageSubType.SetupLauncherMisc
                 If FrmSetupLauncherMisc Is Nothing Then FrmSetupLauncherMisc = New PageSetupLauncherMisc
                 Return FrmSetupLauncherMisc

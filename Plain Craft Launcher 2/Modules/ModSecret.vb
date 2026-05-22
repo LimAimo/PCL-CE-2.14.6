@@ -329,21 +329,7 @@ PCL-Community 及其成员与龙腾猫跃无从属关系，且均不会为您的
         Unknown
     End Enum
     Public Function GetVersionStatus() As VersionStatus
-        Try
-            If IsCurrentVersionBeta AndAlso Not Config.Update.UpdateChannel = 1 Then
-                Dim isNewerThanStable = RemoteServer.IsLatest(UpdateChannel.stable, If(IsArm64System, UpdateArch.arm64, UpdateArch.x64), SemVer.Parse(VersionBaseName), VersionCode)
-                Dim isBetaLatest = RemoteServer.IsLatest(UpdateChannel.beta, If(IsArm64System, UpdateArch.arm64, UpdateArch.x64), SemVer.Parse(VersionBaseName), VersionCode)
-                Return isNewerThanStable AndAlso isBetaLatest
-            End If
-            Return If(RemoteServer.IsLatest(
-                If(IsCurrentVersionBeta, UpdateChannel.beta, UpdateChannel.stable),
-                If(IsArm64System, UpdateArch.arm64, UpdateArch.x64),
-                SemVer.Parse(VersionBaseName),
-                VersionCode), VersionStatus.Latest, VersionStatus.NotLatest)
-        Catch ex As Exception
-            Log(ex, "无法获取最新版本信息，请检查网络连接", LogLevel.Hint)
-            Return VersionStatus.Unknown
-        End Try
+        Return VersionStatus.Latest
     End Function
 
     Public Enum UpdateType

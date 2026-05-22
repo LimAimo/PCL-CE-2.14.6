@@ -1,5 +1,3 @@
-﻿Imports PCL.Core.Link.McPing
-Imports PCL.Core.Link.McPing.Model
 Imports PCL.Core.Minecraft
 Imports PCL.Core.UI
 
@@ -43,20 +41,10 @@ Class MinecraftServer
             ' 获取可达地址（DNS解析）
             Dim addr = Await ServerAddressResolver.GetReachableAddressAsync(address)
 
-            ' Ping服务器
-            Using query = McPingServiceFactory.CreateService(addr.Ip, addr.Port)
-                Dim ret = Await query.PingAsync()
-
-                If ret Is Nothing Then
-                    Throw New Exception("未返回服务器信息")
-                End If
-
-                ' 处理服务器图标
-                Await ImageLoaderHelper.SetServerLogoAsync(ret.Favicon, ImgServerLogo)
-
-                ' 更新UI
-                UpdateServerStatus(ret)
-            End Using
+            ' 显示基本服务器信息（McPing 功能已移除）
+            LabServerDesc.Text = $"Minecraft 服务器 ({addr.Ip}:{addr.Port})"
+            LabServerPlayer.Text = "未知"
+            ImageLoaderHelper.SetFallbackImage(imgServerLogo, FallbackImageUri)
         Catch ex As Exception
             Log(ex, "[MinecraftServer] 信息查询失败")
             LabServerDesc.Text = $"无法连接: {ex.Message}"
@@ -64,24 +52,4 @@ Class MinecraftServer
             ImageLoaderHelper.SetFallbackImage(ImgServerLogo, FallbackImageUri)
         End Try
     End Function
-
-    Private Sub UpdateServerStatus(ret As McPingResult)
-        ' 延迟颜色判断
-        Dim latencyColor = If(ret.Latency < 150, "a", If(ret.Latency < 400, "6", "c"))
-
-        ' 更新描述
-        LabServerDesc.Text = "Minecraft 服务器"
-        MotdRenderer.RenderMotd(ret.Description, False, 2, 14)
-        MotdRenderer.RenderCanvas()
-
-        ' 更新玩家信息
-        Dim playerText = $"{ret.Players.Online}/{ret.Players.Max}{vbCrLf}§{latencyColor}{ret.Latency}ms"
-        MinecraftFormatter.SetColorfulTextLab(playerText, LabServerPlayer, False)
-
-        ' 玩家列表提示
-        If ret.Players.Samples?.Any() Then
-            LabServerPlayer.ToolTip = String.Join(vbCrLf, ret.Players.Samples.Select(Function(x) x.Name))
-            ToolTipService.SetPlacement(LabServerPlayer, Primitives.PlacementMode.Mouse)
-        End If
-    End Sub
 End Class

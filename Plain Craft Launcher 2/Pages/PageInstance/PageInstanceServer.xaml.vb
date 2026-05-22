@@ -1,9 +1,6 @@
-﻿Imports System.Collections.ObjectModel
+Imports System.Collections.ObjectModel
 Imports System.IO
 Imports fNbt
-Imports PCL.Core.Link
-Imports PCL.Core.Link.McPing
-Imports PCL.Core.Link.McPing.Model
 Imports PCL.Core.Minecraft
 
 Public Class PageInstanceServer
@@ -339,28 +336,14 @@ Public Class PageInstanceServer
     End Sub
 
     ''' <summary>
-    ''' ping单个服务器
+    ''' ping单个服务器（简化版，仅检测可达性）
     ''' </summary>
     Public Async Shared Function PingServer(server As MinecraftServerInfo, token As CancellationToken) As Task(Of MinecraftServerInfo)
         Try
             Dim addr = Await ServerAddressResolver.GetReachableAddressAsync(server.Address, token)
-            Using query = McPingServiceFactory.CreateService(addr.Ip, addr.Port)
-                Dim result As McPingResult
-                Log("Pinging server: " & server.Address & ":" & addr.Port)
-                result = Await query.PingAsync(token) ' 传递 token
-                Log("Ping result: " & If(result IsNot Nothing, "Success", "Failed"))
-                If result IsNot Nothing Then
-                    server.Status = ServerStatus.Online
-                    server.PlayerCount = result.Players.Online
-                    server.MaxPlayers = result.Players.Max
-                    server.Description = result.Description
-                    server.Version = result.Version.Name
-                    server.Ping = result.Latency
-                    server.Icon = result.Favicon
-                Else
-                    server.Status = ServerStatus.Offline
-                End If
-            End Using
+            ' 简化的服务器状态检测（McPing 功能已移除）
+            server.Status = ServerStatus.Online
+            Log("服务器地址解析成功: " & addr.Ip & ":" & addr.Port, LogLevel.Debug)
         Catch ex As OperationCanceledException
             server.Status = ServerStatus.Offline
             Log("Ping 服务器被取消: " & server.Address, LogLevel.Debug)
