@@ -1,0 +1,93 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- 项目属性 -->
+    <PropertyGroup>
+        <AssemblyTitle>PCL.WinUI</AssemblyTitle>
+        <AssemblyName>PCL.WinUI</AssemblyName>
+        <Description>Plain Craft Launcher 2 Community Edition - WinUI 3 前端</Description>
+        <Company>PCL Community</Company>
+        <Product>PCL.WinUI</Product>
+        <Copyright>Copyright © PCL Community</Copyright>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <FileVersion>1.0.0.0</FileVersion>
+        <OutputType>WinExe</OutputType>
+        <StartupObject>PCL.WinUI.Program</StartupObject>
+    </PropertyGroup>
+    <PropertyGroup>
+        <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+        <Platform Condition="'$(Platform)' == ''">x64</Platform>
+        <Configurations>Debug;CI;Release;Beta</Configurations>
+        <Platforms>x64;ARM64</Platforms>
+        <RootNamespace>PCL.WinUI</RootNamespace>
+        <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+        <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+        <UseWinUI>true</UseWinUI>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
+        <WindowsPackageType>None</WindowsPackageType>
+        <EnableMsixTooling>true</EnableMsixTooling>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>14.0</LangVersion>
+        <Nullable>enable</Nullable>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <OutputPath>bin\$(Configuration)-$(Platform)\</OutputPath>
+        <PlatformTarget>$(Platform)</PlatformTarget>
+        <NoWarn>$(NoWarn);CS9113</NoWarn>
+        <!-- 禁用自动生成的 Main，使用自定义 Program.Main 注入启动流程 -->
+        <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+        <!-- 自包含部署：将 .NET 运行库嵌入程序，目标机器无需安装 .NET -->
+        <SelfContained>true</SelfContained>
+        <!-- Windows App SDK 自包含部署 -->
+        <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+        <!-- 发布为单文件（运行时库仍需单独文件，WinUI 3 限制） -->
+        <PublishSingleFile>true</PublishSingleFile>
+        <!-- 将原生库嵌入单文件包 -->
+        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+        <!-- 启用压缩以减小体积 -->
+        <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+        <!-- 运行时标识符（自包含必须指定） -->
+        <RuntimeIdentifier>win-$(Platform)</RuntimeIdentifier>
+    </PropertyGroup>
+    <!-- 构建配置 -->
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'CI' Or '$(Configuration)' == 'DebugCI'">
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG;TRACE</DefineConstants>
+        <DefineConstants Condition="'$(Configuration)' == 'CI' Or '$(Configuration)' == 'DebugCI'">$(DefineConstants);CI;TRACE</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'Beta' Or '$(Configuration)' == 'Release' Or '$(Configuration)' == 'Publish'">
+        <DebugType>none</DebugType>
+        <Optimize>true</Optimize>
+        <DefineConstants Condition="'$(Configuration)' == 'Release' Or '$(Configuration)' == 'Publish'">$(DefineConstants);RELEASE;PUBLISH</DefineConstants>
+        <DefineConstants Condition="'$(Configuration)' == 'Beta'">$(DefineConstants);BETA;PUBLISH</DefineConstants>
+    </PropertyGroup>
+    <!-- NuGet 引用 -->
+    <ItemGroup>
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
+    </ItemGroup>
+    <!-- 项目引用 -->
+    <ItemGroup>
+        <ProjectReference Include="..\PCL.Core\PCL.Core.csproj" />
+        <ProjectReference Include="..\PCL.Core.WinUI\PCL.Core.WinUI.csproj" />
+    </ItemGroup>
+    <!-- 源生成器 -->
+    <ItemGroup>
+        <AdditionalFiles Include="..\PCL.Core\App\IoC\LifecycleState.cs" />
+        <ProjectReference Include="..\PCL.Core.SourceGenerators\PCL.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    </ItemGroup>
+    <!-- 信不过巨硬的智障代码，手动包含需要的文件 -->
+    <PropertyGroup>
+        <EnableDefaultItems>false</EnableDefaultItems>
+        <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+        <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+        <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
+        <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
+        <EnableDefaultPageItems>false</EnableDefaultPageItems>
+    </PropertyGroup>
+    <!-- 资源 -->
+    <ItemGroup>
+        <ApplicationDefinition Include="App.xaml" />
+        <Page Include="**\*.xaml" Exclude="App.xaml;bin\**;obj\**;publish\**" />
+        <Compile Include="**\*.cs" Exclude="bin\**;obj\**;publish\**;**\*.g.cs" />
+    </ItemGroup>
+</Project>

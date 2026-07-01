@@ -1,4 +1,4 @@
-﻿<local:MyPageRight
+<local:MyPageRight
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:PCL" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -110,7 +110,7 @@
                         </local:MyComboBox>
                         <TextBlock VerticalAlignment="Center" Grid.Row="14" HorizontalAlignment="Left" Text="IP 协议偏好" Margin="0,0,25,0" />
                         <local:MyComboBox x:Name="ComboPreferredIpStack" Grid.Row="14" Grid.ColumnSpan="2" Tag="LaunchPreferredIpStack" Grid.Column="1" 
-                                          ToolTip="通过设置 Java 虚拟机参数来设置 MC 的 IP 协议版本偏好。&#xa;一般建议设置为 “IPv4 优先”，这能确保 PCL CE 大厅正常工作。&#xa;如果有手动 IPv6 联机等需要，可以选择其他选项。&#xa;&#xa;IPv4 优先：-Djava.net.preferIPv4Stack=true&#xa;默认：不添加额外参数&#xa;IPv6 优先：-Djava.net.preferIPv6Stack=true">
+                                          ToolTip="通过设置 Java 虚拟机参数来设置 MC 的 IP 协议版本偏好。&#xa;一般建议设置为 “IPv4 优先”。&#xa;如果有手动 IPv6 联机等需要，可以选择其他选项。&#xa;&#xa;IPv4 优先：-Djava.net.preferIPv4Stack=true&#xa;默认：不添加额外参数&#xa;IPv6 优先：-Djava.net.preferIPv6Stack=true">
                             <local:MyComboBoxItem Content="IPv4 优先" IsSelected="True" />
                             <local:MyComboBoxItem Content="Java 默认" />
                             <local:MyComboBoxItem Content="IPv6 优先" />

@@ -504,8 +504,6 @@ Public Class FormMain
                 Return
             End If
         End If
-        '关闭联机大厅
-        'Await LobbyController.CloseAsync().ConfigureAwait(False)
         '存储上次使用的档案编号
         SaveProfile()
         '关闭
@@ -549,8 +547,6 @@ Public Class FormMain
                                             Optional force As Boolean = True,
                                             Optional isUpdating As Boolean = False)
         'On Error Resume Next
-        '关闭联机大厅
-        'Await LobbyController.CloseAsync().ConfigureAwait(False)
         IsProgramEnded = True
         AniControlEnabled += 1
         If IsUpdateWaitingRestart AndAlso Not isUpdating Then UpdateRestart(False, triggerRestart:=False)

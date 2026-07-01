@@ -116,7 +116,6 @@
                         <RowDefinition Height="45" />
                         <RowDefinition Height="45" />
                         <RowDefinition Height="45" />
-                        <RowDefinition Height="45" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="40" />
@@ -187,21 +186,6 @@
                         Grid.Column="1"
                         Grid.ColumnSpan="2"
                         Margin="-5,0,0,0"
-                        Info="提供了联机模块"
-                        IsHitTestVisible="False"
-                        Title="EasyTier" />
-                    <local:MyButton
-                        Grid.Row="4"
-                        Grid.Column="2"
-                        Height="35"
-                        local:CustomEventService.EventData="https://easytier.cn"
-                        local:CustomEventService.EventType="打开网页"
-                        Text="打开网站" />
-                    <local:MyListItem
-                        Grid.Row="5"
-                        Grid.Column="1"
-                        Grid.ColumnSpan="2"
-                        Margin="-5,0,0,0"
                         Info="提供了 MCIM 中国 Mod 下载镜像源和帮助库图床！"
                         IsHitTestVisible="False"
                         Title="z0z0r4" />
@@ -222,7 +206,7 @@
                         IsHitTestVisible="False"
                         Title="Patrick" />
                     <local:MyListItem
-                        Grid.Row="8"
+                        Grid.Row="7"
                         Grid.Column="1"
                         Grid.ColumnSpan="2"
                         Margin="-5,0,0,0"
@@ -237,7 +221,7 @@
                         IsHitTestVisible="False"
                         Title="Minecraft 中文论坛" />
                     <local:MyListItem
-                        Grid.Row="10"
+                        Grid.Row="9"
                         Grid.Column="1"
                         Grid.ColumnSpan="2"
                         Margin="-5,0,0,0"
@@ -290,17 +274,6 @@
                     </Image>
                     <Image
                         Grid.Row="4"
-                        Margin="3"
-                        Source="/Plain Craft Launcher 2;component/Images/Heads/EasyTier.png">
-                        <Image.Clip>
-                            <EllipseGeometry
-                                Center="17 17"
-                                RadiusX="17"
-                                RadiusY="17" />
-                        </Image.Clip>
-                    </Image>
-                    <Image
-                        Grid.Row="5"
                         Margin="3"
                         Source="/Plain Craft Launcher 2;component/Images/Heads/z0z0r4.png">
                         <Image.Clip>
@@ -355,7 +328,7 @@
                         </Image.Clip>
                     </Image>
                     <Image
-                        Grid.Row="10"
+                        Grid.Row="9"
                         Margin="3"
                         Source="/Plain Craft Launcher 2;component/Images/Heads/PCL2.png">
                         <Image.Clip>
@@ -431,7 +404,7 @@
                     <TextBlock
                         Margin="0,0,0,2"
                         LineHeight="17"
-                        Text="本软件的 User Agent 中包含启动器的版本号，以统计各版本的用户数量。&#13;除此之外，本软件不会向开发者上传任何其他信息。&#13;* 联机与软硬件调查相关功能遵循其自身的隐私政策，与上述说明不通用。"
+                        Text="本软件的 User Agent 中包含启动器的版本号，以统计各版本的用户数量。&#13;除此之外，本软件不会向开发者上传任何其他信息。&#13;* 软硬件调查相关功能遵循其自身的隐私政策，与上述说明不通用。"
                         TextWrapping="Wrap" />
                     <TextBlock
                         Margin="0,12,0,4"
@@ -455,12 +428,6 @@
                             local:CustomEventService.EventType="打开网页"
                             Padding="13,0"
                             Text="社区版开源代码" />
-                        <local:MyButton
-                            Margin="0,0,20,0"
-                            local:CustomEventService.EventData="https://www.pclc.cc/privacy/personal-info-brief.html"
-                            local:CustomEventService.EventType="打开网页"
-                            Padding="13,0"
-                            Text="社区版联机大厅隐私政策" />
                         <local:MyButton
                             Margin="0,0,20,0"
                             local:CustomEventService.EventData="https://account.naids.com/policy"

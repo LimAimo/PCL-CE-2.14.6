@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 
 namespace PCL.Core.Utils;
 
@@ -7,13 +7,6 @@ namespace PCL.Core.Utils;
 /// </summary>
 public static partial class RegexPatterns
 {
-    /// <summary>
-    /// 陶瓦联机 ID。
-    /// </summary>
-    public static readonly Regex TerracottaId = _TerracottaId();
-    [GeneratedRegex("([0-9A-Z]{5}-){4}[0-9A-Z]{5}", RegexOptions.IgnoreCase)]
-    private static partial Regex _TerracottaId();
-
     /// <summary>
     /// 换行符，包括 <c>\r\n</c> <c>\n</c> <c>\r</c> 三种。
     /// </summary>

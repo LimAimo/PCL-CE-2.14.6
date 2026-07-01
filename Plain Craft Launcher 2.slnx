@@ -4,15 +4,46 @@
     <BuildType Name="Beta" />
     <BuildType Name="Debug" />
     <BuildType Name="Release" />
+
     <Platform Name="AnyCPU" />
     <Platform Name="ARM64" />
     <Platform Name="x64" />
   </Configurations>
+
   <Project Path="PCL.Core\PCL.Core.csproj" Type="C#" />
+
   <Project Path="PCL.Core.Wpf\PCL.Core.Wpf.csproj" Type="C#" />
-  <Project Path="PCL.Core.SourceGenerators\PCL.Core.SourceGenerators.csproj" Type="C#" />
-  <Project Path="PCL.Core.Test\PCL.Core.Test.csproj" Type="C#">
+
+  <Project Path="PCL.Core.WinUI\PCL.Core.WinUI.csproj" Type="C#">
+    <!-- WinUI 通常必须明确平台，否则 CI 容易跳过或生成异常 -->
+    <Build Solution="*|x64" Project="true" />
+    <Build Solution="*|ARM64" Project="true" />
+  </Project>
+
+  <Project Path="PCL.Core.SourceGenerators\PCL.Core.SourceGenerators.csproj" Type="C#">
+    <!-- Source Generator：只作为依赖，不独立构建输出 -->
     <Build Solution="*|*" Project="false" />
   </Project>
-  <Project Path="Plain Craft Launcher 2\Plain Craft Launcher 2.vbproj" Type="VB" />
+
+  <Project Path="PCL.Core.Test\PCL.Core.Test.csproj" Type="C#">
+    <!-- 测试项目必须参与 CI，否则等于“假成功” -->
+    <Build Solution="CI|*" Project="true" />
+    <Build Solution="Beta|*" Project="true" />
+    <Build Solution="Debug|*" Project="true" />
+    <Build Solution="Release|*" Project="false" />
+  </Project>
+
+  <Project Path="Plain Craft Launcher 2\Plain Craft Launcher 2.vbproj" Type="VB">
+    <!-- VB 项目一般建议在所有配置中正常构建 -->
+    <Build Solution="*|*" Project="true" />
+  </Project>
+
+  <Project Path="PCL.WinUI\PCL.WinUI.csproj" Type="C#">
+    <!-- WinUI 不能只依赖 AnyCPU -->
+    <Build Solution="CI|x64" Project="true" />
+    <Build Solution="CI|ARM64" Project="true" />
+    <Build Solution="Beta|x64" Project="true" />
+    <Build Solution="Debug|x64" Project="true" />
+    <Build Solution="Release|x64" Project="true" />
+  </Project>
 </Solution>

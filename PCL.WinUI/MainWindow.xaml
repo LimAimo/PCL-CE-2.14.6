@@ -1,0 +1,31 @@
+<Window
+    x:Class="PCL.WinUI.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PCL.WinUI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Plain Craft Launcher 2 CE">
+
+    <Grid x:Name="RootGrid">
+        <NavigationView
+            x:Name="NavView"
+            IsBackButtonVisible="Collapsed"
+            PaneDisplayMode="Left"
+            OpenPaneLength="200"
+            CompactPaneLength="48"
+            SelectionChanged="NavView_SelectionChanged"
+            IsSettingsVisible="False">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Icon="Play" Tag="Launch" Content="启动"/>
+                <NavigationViewItem Icon="Download" Tag="Download" Content="下载"/>
+            </NavigationView.MenuItems>
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem Icon="Setting" Tag="Setup" Content="设置"/>
+            </NavigationView.FooterMenuItems>
+
+            <Frame x:Name="ContentFrame" Background="Transparent"/>
+        </NavigationView>
+    </Grid>
+</Window>
