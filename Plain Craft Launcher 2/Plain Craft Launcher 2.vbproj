@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PCL.Core\PCL.Core.csproj" />
+    <ProjectReference Include="..\PCL.Core.Wpf\PCL.Core.Wpf.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Import Include="Newtonsoft.Json.Linq" />

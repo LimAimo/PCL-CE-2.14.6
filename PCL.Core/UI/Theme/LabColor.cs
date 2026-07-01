@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Wacton.Unicolour;
 
 namespace PCL.Core.UI.Theme;
@@ -93,14 +93,6 @@ public class LabColor
     }
 
     /// <summary>
-    /// Create a <see cref="LabColor"/> instance from <see cref="System.Windows.Media.Color"/>.
-    /// </summary>
-    public static LabColor FromWpfColor(System.Windows.Media.Color color)
-        => FromRgb(color.ScR, color.ScG, color.ScB, color.ScA);
-
-    public static implicit operator LabColor(System.Windows.Media.Color color) => FromWpfColor(color);
-
-    /// <summary>
     /// ScRGB 映射模式.
     /// </summary>
     public enum ScRgbMappingMode
@@ -157,17 +149,6 @@ public class LabColor
             return field = ToScRgb();
         }
     } = default;
-
-    /// <summary>
-    /// Convert to <see cref="System.Windows.Media.Color"/>.
-    /// </summary>
-    public System.Windows.Media.Color ToWpfColor()
-    {
-        var (a, r, g, b) = ScRgb;
-        return System.Windows.Media.Color.FromScRgb(a, r, g, b);
-    }
-
-    public static implicit operator System.Windows.Media.Color(LabColor lab) => lab.ToWpfColor();
 
     /// <summary>
     /// Convert to <see cref="CatColorResource"/>.

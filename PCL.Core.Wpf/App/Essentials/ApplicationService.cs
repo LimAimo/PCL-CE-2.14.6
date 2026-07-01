@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
@@ -12,6 +12,13 @@ public sealed partial class ApplicationService
 {
     public static Func<Application>? Loading { private get; set; }
 
+    /// <summary>
+    /// 在 Application 实例创建后调用的初始化钩子。<br/>
+    /// 由框架特定实现（如 PCL.Core.Wpf 的 WpfPlatformInitializer）设置，
+    /// 用于注册 Platform 服务定位器中的各平台服务。
+    /// </summary>
+    public static Action<Application>? OnApplicationCreated { private get; set; }
+
     [LifecycleStart]
     private static void _Start()
     {
@@ -19,15 +26,17 @@ public sealed partial class ApplicationService
         var app = Loading!.Invoke();
         app.DispatcherUnhandledException += (_, e) => Lifecycle.OnException(e.Exception);
         app.Startup += (_, _) => Lifecycle.OnLoading();
-        Lifecycle.CurrentApplication = app;
+        Lifecycle.CurrentApplication = new WpfApplicationHost(app);
+        OnApplicationCreated?.Invoke(app);
         Loading = null;
+        OnApplicationCreated = null;
         Context.Trace("应用程序容器初始化完毕");
     }
 
     [LifecycleStop]
     private static void _Stop()
     {
-        var app = Lifecycle.CurrentApplication;
+        var app = ((WpfApplicationHost)Lifecycle.CurrentApplication).Application;
         var dispatcher = app.Dispatcher;
         if (Lifecycle.IsForceShutdown)
         {
@@ -55,7 +64,7 @@ public sealed partial class ApplicationService
             dispatcher.BeginInvoke(DispatcherPriority.Send, () => app.Exit -= Exited);
         }
         return;
-        
+
         void Exited(object? sender, EventArgs e)
         {
             // ReSharper disable once AccessToDisposedClosure

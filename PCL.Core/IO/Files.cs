@@ -1,4 +1,4 @@
-﻿using ICSharpCode.SharpZipLib.BZip2;
+using ICSharpCode.SharpZipLib.BZip2;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
 using ICSharpCode.SharpZipLib.Zip;
@@ -16,7 +16,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using PCL.Core.App;
 
 namespace PCL.Core.IO;
@@ -646,16 +645,8 @@ public static class Files {
             Directory.CreateDirectory(dest);
         }
 
-        var dataObject = Clipboard.GetDataObject();
-        if (dataObject == null || !dataObject.GetDataPresent(DataFormats.FileDrop)) {
-            return 0;
-        }
-
-        var data = dataObject.GetData(DataFormats.FileDrop);
-        if (data is not string[] paths) {
-            return 0;
-        }
-        if (paths.Length == 0) {
+        var paths = Platform.Clipboard.GetFiles();
+        if (paths is null || paths.Length == 0) {
             return 0;
         }
 

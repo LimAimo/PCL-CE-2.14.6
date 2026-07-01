@@ -15,7 +15,7 @@ namespace PCL.Core.UI.Effects;
 /// </summary>
 public sealed class AdaptiveBlurEffect : ShaderEffect
 {
-    private const string PixelShaderUri = "pack://application:,,,/PCL.Core;component/UI/Assets/Shaders/AdaptiveBlur.ps";
+    private const string PixelShaderUri = "pack://application:,,,/PCL.Core.Wpf;component/UI/Assets/Shaders/AdaptiveBlur.ps";
     
     private static readonly MemoryPool<byte> _MemoryPool = MemoryPool<byte>.Shared;
     private static readonly object _ShaderLock = new();

@@ -1,7 +1,7 @@
-﻿namespace PCL.Core.Utils.OS;
-
 using System;
-using System.Windows;
+using PCL.Core.App;
+
+namespace PCL.Core.Utils.OS;
 
 public static class ClipboardUtils {
     /// <summary>
@@ -13,8 +13,6 @@ public static class ClipboardUtils {
             throw new ArgumentException("Paths cannot be null or empty.", nameof(paths));
         }
 
-        var dataObject = new DataObject();
-        dataObject.SetData(DataFormats.FileDrop, paths);
-        Clipboard.SetDataObject(dataObject);
+        Platform.Clipboard.SetFiles(paths);
     }
 }

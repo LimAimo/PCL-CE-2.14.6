@@ -213,7 +213,7 @@ public class LifecycleServiceTypesGenerator : IIncrementalGenerator
         sb.AppendLine("/// <summary>");
         sb.AppendLine("/// 包含所有使用 LifecycleService 注解的类型，按 StartState 分类并按 Priority 降序排序");
         sb.AppendLine("/// </summary>");
-        sb.AppendLine("public static class LifecycleServiceTypes");
+        sb.AppendLine("internal static class LifecycleServiceTypes");
         sb.AppendLine("{");
 
         // 为每个状态生成数组

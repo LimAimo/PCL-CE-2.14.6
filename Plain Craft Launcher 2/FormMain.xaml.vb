@@ -96,7 +96,7 @@ Public Class FormMain
             AddHandler Me.SourceInitialized,
                 Sub()
                     Dim windowInterop As New WindowInteropHelper(Me)
-                    helper.HwndSource = HwndSource.FromHwnd(windowInterop.Handle)
+                    helper.WindowHandle = New WpfWindowHandleProvider(HwndSource.FromHwnd(windowInterop.Handle))
                     helper.AddHook()
                 End Sub
 

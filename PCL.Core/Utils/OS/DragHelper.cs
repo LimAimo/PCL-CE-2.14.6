@@ -1,8 +1,6 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Windows;
-using System.Windows.Interop;
 
 namespace PCL.Core.Utils.OS;
 
@@ -12,21 +10,21 @@ public partial class DragHelper
     public event EventHandler? DragDrop;
 
     public string[]? DropFilePaths { get; private set; }
-    public Point DropDragPoint { get; private set; }
+    public DragPoint DropDragPoint { get; private set; }
 
-    public HwndSource? HwndSource { get; set; }
+    public IWindowHandleProvider? WindowHandle { get; set; }
 
     #region Public API
 
     public void AddHook()
     {
-        if (HwndSource is null)
-            throw new InvalidOperationException("HwndSource 未设置");
+        if (WindowHandle is null)
+            throw new InvalidOperationException("WindowHandle 未设置");
 
         RemoveHook();
 
-        HwndSource.AddHook(WndProc);
-        IntPtr hwnd = HwndSource.Handle;
+        WindowHandle.AddHook(WndProc);
+        IntPtr hwnd = WindowHandle.Handle;
 
         if (IsUserAnAdmin())
             RevokeDragDrop(hwnd);
@@ -37,11 +35,11 @@ public partial class DragHelper
 
     public void RemoveHook()
     {
-        if (HwndSource is null)
+        if (WindowHandle is null)
             return;
 
-        HwndSource.RemoveHook(WndProc);
-        DragAcceptFiles(HwndSource.Handle, false);
+        WindowHandle.RemoveHook(WndProc);
+        DragAcceptFiles(WindowHandle.Handle, false);
     }
 
     #endregion
@@ -58,7 +56,7 @@ public partial class DragHelper
         if (TryGetDropInfo(msg, wParam, out var files, out var pt))
         {
             DropFilePaths = files;
-            DropDragPoint = new Point(pt.X, pt.Y);
+            DropDragPoint = pt;
             DragDrop?.Invoke(this, EventArgs.Empty);
             handled = true;
         }
@@ -166,7 +164,7 @@ public partial class DragHelper
 
     [LibraryImport("shell32.dll", EntryPoint = "DragQueryFileW", StringMarshalling = StringMarshalling.Utf16)]
     private static partial uint DragQueryFile(IntPtr hDrop, uint iFile, Span<char> lpszFile, uint cch);
-    
+
     [LibraryImport("shell32.dll", EntryPoint = "DragQueryFileW")]
     private static partial uint DragQueryFile(IntPtr hDrop, uint iFile, IntPtr lpszFile, uint cch);
 
@@ -184,8 +182,11 @@ public partial class DragHelper
 
     #region Structs
 
+    /// <summary>
+    /// 拖放点坐标。
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    private struct DragPoint
+    public struct DragPoint
     {
         public int X;
         public int Y;

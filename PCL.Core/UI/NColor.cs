@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Numerics;
-using System.Windows.Media;
 
 namespace PCL.Core.UI;
 
@@ -51,10 +50,6 @@ public struct NColor :
     {
         _color = new Vector4(Math.Clamp(r, 0, 255), Math.Clamp(g, 0, 255), Math.Clamp(b, 0, 255),
             Math.Clamp(a, 0, 255));
-    }
-
-    public NColor(Color color) : this(color.R, color.G, color.B, a: color.A)
-    {
     }
 
     public NColor(System.Drawing.Color color) : this(color.R, color.G, color.B, color.A)
@@ -115,14 +110,6 @@ public struct NColor :
     }
 
     public NColor(float r, float g, float b) : this(r, g, b, 255f)
-    {
-    }
-
-    public NColor(SolidColorBrush brush) : this(brush.Color)
-    {
-    }
-
-    public NColor(Brush brush) : this((SolidColorBrush)brush)
     {
     }
 

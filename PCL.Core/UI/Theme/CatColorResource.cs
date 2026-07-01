@@ -1,6 +1,4 @@
-﻿using System.Windows.Media;
 using PCL.Core.App;
-using PCL.Core.App.IoC;
 
 namespace PCL.Core.UI.Theme;
 
@@ -35,23 +33,21 @@ public class CatColorResource
     public required string Suffix { get; init; }
 
     /// <summary>
-    /// 是否应用到 <see cref="SolidColorBrush"/> 资源。
+    /// 是否应用到画刷资源。
     /// </summary>
     public bool ApplyToBrush { get; init; } = false;
 
     /// <summary>
-    /// 是否应用到 <see cref="Color"/> 资源。
+    /// 是否应用到颜色资源。
     /// </summary>
     public bool ApplyToColor { get; init; } = false;
 
     /// <summary>
-    /// 应用该颜色到 WPF 资源字典中，仅可在 <see cref="LifecycleState.Loaded"/> 及后面的阶段调用。
+    /// 应用该颜色到资源字典中，仅可在 <see cref="PCL.Core.App.IoC.LifecycleState.Loaded"/> 及后面的阶段调用。
     /// </summary>
     public void Apply()
     {
-        var res = Lifecycle.CurrentApplication.Resources;
-        var color = Color.FromScRgb(Alpha, Red, Green, Blue);
-        if (ApplyToColor) res[$"{ColorPrefix}{Suffix}"] = color;
-        if (ApplyToBrush) res[$"{BrushPrefix}{Suffix}"] = new SolidColorBrush(color);
+        if (ApplyToColor) Platform.ResourceDictionary.SetScColor($"{ColorPrefix}{Suffix}", Alpha, Red, Green, Blue);
+        if (ApplyToBrush) Platform.ResourceDictionary.SetScColorBrush($"{BrushPrefix}{Suffix}", Alpha, Red, Green, Blue);
     }
 }

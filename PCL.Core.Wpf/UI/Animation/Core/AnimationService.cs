@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Channels;
@@ -76,7 +76,7 @@ public sealed class AnimationService : GeneralService
         _RegisterValueProcessors();
         
         // 初始化 UI 线程访问提供器并启动赋值 Task
-        UIAccessProvider = new WpfUIAccessProvider(Lifecycle.CurrentApplication.Dispatcher);
+        UIAccessProvider = Platform.UIAccess;
         _ = UIAccessProvider.InvokeAsync(async () =>
         {
             if (_cts.IsCancellationRequested) return;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -6,7 +6,6 @@ using System.IO;
 using System.IO.Pipes;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using PCL.Core.App.IoC;
 using PCL.Core.IO;
 
@@ -130,18 +129,7 @@ public sealed partial class RpcService
 
             void ActivateMainWindow()
             {
-                var app = Lifecycle.CurrentApplication;
-                app.Dispatcher.BeginInvoke(() =>
-                {
-                    var window = app.MainWindow!;
-                    if (window.WindowState == WindowState.Minimized) window.WindowState = WindowState.Normal;
-                    if (!window.Topmost)
-                    {
-                        window.Topmost = true;
-                        window.Topmost = false;
-                    }
-                    window.Activate();
-                });
+                Platform.WindowActivation.ActivateMainWindow();
             }
         })
     };

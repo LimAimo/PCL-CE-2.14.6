@@ -1,4 +1,4 @@
-﻿Imports PCL.Core.App
+Imports PCL.Core.App
 Imports PCL.Core.App.Essentials
 Imports PCL.Core.App.IoC
 
@@ -24,6 +24,7 @@ Module Program
                 app.InitializeComponent()
                 Return app
             End Function
+        ApplicationService.OnApplicationCreated = AddressOf WpfPlatformInitializer.Initialize
         MainWindowService.Loading =
             Function()
                 Dim form As New FormMain()

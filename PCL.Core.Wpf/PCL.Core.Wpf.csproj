@@ -1,0 +1,73 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- 项目属性 -->
+    <PropertyGroup>
+        <AssemblyTitle>PCL.Core.Wpf</AssemblyTitle>
+        <AssemblyName>PCL.Core.Wpf</AssemblyName>
+        <Description>PCL Community WPF UI 适配层（承接 PCL.Core 中所有 WPF 相关实现）</Description>
+        <Company>PCL Community</Company>
+        <Product>PCL.Core.Wpf</Product>
+        <Copyright>Copyright © PCL Community</Copyright>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <FileVersion>1.0.0.0</FileVersion>
+    </PropertyGroup>
+    <PropertyGroup>
+        <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+        <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
+        <Configurations>Debug;CI;Release;Beta</Configurations>
+        <Platforms>AnyCPU;x64;ARM64</Platforms>
+        <RootNamespace>PCL.Core</RootNamespace>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>14.0</LangVersion>
+        <Nullable>enable</Nullable>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <OutputPath>bin\$(Configuration)-$(Platform)\</OutputPath>
+        <PlatformTarget>$(Platform)</PlatformTarget>
+        <NoWarn>$(NoWarn);CS9113</NoWarn>
+    </PropertyGroup>
+    <!-- 构建配置（与 PCL.Core 保持一致） -->
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'CI' Or '$(Configuration)' == 'DebugCI'">
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <DefineConstants Condition="'$(Configuration)' == 'Debug'">DEBUG;TRACE</DefineConstants>
+        <DefineConstants Condition="'$(Configuration)' == 'CI' Or '$(Configuration)' == 'DebugCI'">CI;TRACE</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'Beta' Or '$(Configuration)' == 'Release' Or '$(Configuration)' == 'Publish'">
+        <DebugType>none</DebugType>
+        <Optimize>true</Optimize>
+        <DefineConstants Condition="'$(Configuration)' == 'Release' Or '$(Configuration)' == 'Publish'">RELEASE;PUBLISH</DefineConstants>
+        <DefineConstants Condition="'$(Configuration)' == 'Beta'">BETA;PUBLISH</DefineConstants>
+    </PropertyGroup>
+    <!-- NuGet 引用（仅保留 WPF 实现所需） -->
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    </ItemGroup>
+    <!-- 项目引用：PCL.Core（框架无关核心库） -->
+    <ItemGroup>
+        <ProjectReference Include="..\PCL.Core\PCL.Core.csproj" />
+    </ItemGroup>
+    <!-- 信不过巨硬的智障代码，手动包含需要的文件 -->
+    <PropertyGroup>
+        <EnableDefaultItems>false</EnableDefaultItems>
+        <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+        <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+        <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
+        <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
+        <EnableDefaultPageItems>false</EnableDefaultPageItems>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="**\*.cs" Exclude="bin\**;obj\**;publish\**;**\*.g.cs" />
+        <Page Include="**\*.xaml" Exclude="bin\**;obj\**;publish\**" />
+        <Resource Include="UI\Assets\*" />
+        <Resource Include="UI\Assets\Shaders\*.ps" />
+    </ItemGroup>
+    <!-- 源生成器（与 PCL.Core 共用，使 [LifecycleScope] 等在本程序集内也能生成实现） -->
+    <ItemGroup>
+        <AdditionalFiles Include="..\PCL.Core\App\IoC\LifecycleState.cs" />
+        <ProjectReference Include="..\PCL.Core.SourceGenerators\PCL.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    </ItemGroup>
+</Project>

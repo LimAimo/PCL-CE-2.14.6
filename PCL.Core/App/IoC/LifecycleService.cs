@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -132,7 +133,39 @@ partial class Lifecycle
         }
     }
 
-    private static Type[] _GetServiceTypes(LifecycleState state) => LifecycleServiceTypes.GetServiceTypes(state);
+    private static readonly Dictionary<LifecycleState, Type[]> _ServiceTypesCache = [];
+
+    private static Type[] _GetServiceTypes(LifecycleState state)
+    {
+        if (_ServiceTypesCache.TryGetValue(state, out var cached)) return cached;
+
+        var result = new List<(Type Type, int Priority)>();
+        var seen = new HashSet<Type>();
+
+        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            Type[] types;
+            try { types = assembly.GetTypes(); }
+            catch (ReflectionTypeLoadException) { continue; }
+
+            foreach (var type in types)
+            {
+                if (type.IsAbstract || type.IsInterface) continue;
+                if (!typeof(ILifecycleService).IsAssignableFrom(type)) continue;
+
+                var attr = type.GetCustomAttributes<LifecycleServiceAttribute>(false).FirstOrDefault();
+                if (attr == null) continue;
+                if (attr.StartState != state) continue;
+
+                seen.Add(type);
+                result.Add((type, attr.Priority));
+            }
+        }
+
+        var sorted = result.OrderByDescending(x => x.Priority).Select(x => x.Type).ToArray();
+        _ServiceTypesCache[state] = sorted;
+        return sorted;
+    }
 
     private static ILifecycleService _CreateService(Type type)
     {
